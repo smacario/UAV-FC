@@ -47,7 +47,7 @@ int main(void) {
     	mag_Y = mag_readY - Y_offset();
     	mag_Z = mag_readZ - Z_offset();
 
-    	// Revisar calibracion y calculo de angulo.
+    	// Revisar calibracion y calculo de angulo. prueba
 
     	heading_angle_rad = atan2(mag_Y, mag_X);
     	if(heading_angle_rad >= 0) heading_angle_deg = heading_angle_rad * (180.0f / _PI);
