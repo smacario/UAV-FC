@@ -1,0 +1,13 @@
+fsl_clock.h:470:20:CLOCK_SetLpuart0Clock	16	static
+fsl_clock.h:480:20:CLOCK_SetLpuart1Clock	16	static
+fsl_clock.h:490:20:CLOCK_SetTpmClock	16	static
+fsl_clock.h:500:20:CLOCK_SetFlexio0Clock	16	static
+fsl_clock.h:528:20:CLOCK_SetClkOutClock	16	static
+fsl_clock.h:538:20:CLOCK_SetRtcClkOutClock	16	static
+fsl_clock.h:629:20:CLOCK_SetSimSafeDivs	8	static
+fsl_clock.h:787:20:CLOCK_SetXtal0Freq	16	static
+fsl_smc.h:256:20:SMC_SetPowerModeProtection	16	static
+fsl_smc.h:275:33:SMC_GetPowerModeState	16	static
+clock_config.c:54:6:BOARD_InitBootClocks	8	static
+clock_config.c:145:6:BOARD_BootClockRUN	8	static
+clock_config.c:235:6:BOARD_BootClockVLPR	8	static

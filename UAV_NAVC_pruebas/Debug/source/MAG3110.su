@@ -1,0 +1,10 @@
+MAG3110.c:17:9:MAG3110_read_reg	56	static
+MAG3110.c:37:6:MAG3310_write_reg	48	static
+MAG3110.c:56:6:MAG3110_calibration	48	static
+MAG3110.c:150:9:X_offset	8	static
+MAG3110.c:154:9:Y_offset	8	static
+MAG3110.c:158:9:Z_offset	8	static
+MAG3110.c:162:6:MAG3310_init	16	static
+MAG3110.c:179:6:MAG3310_setDataRate	32	static
+MAG3110.c:204:6:MAG3310_stop	8	static
+MAG3110.c:210:6:SysTick_Handler	8	static

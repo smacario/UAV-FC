@@ -1,0 +1,6 @@
+mma8451.c:11:9:mma8451_read_reg	48	static
+mma8451.c:31:6:mma8451_write_reg	48	static
+mma8451.c:50:6:mma8451_init	8	static
+mma8451.c:83:6:mma8451_setDataRate	24	static
+mma8451.c:108:6:acc_init	8	static
+mma8451.c:121:6:acc_stop	8	static

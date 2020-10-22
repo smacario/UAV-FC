@@ -1,0 +1,2 @@
+I2C.c:64:13:i2c_release_bus_delay	0	static
+I2C.c:162:6:I2C_init	56	static

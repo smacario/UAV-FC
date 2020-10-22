@@ -1,0 +1,16 @@
+fsl_dma.c:77:6:DMA_Init	0	static
+fsl_dma.c:91:6:DMA_Deinit	0	static
+fsl_dma.c:107:6:DMA_ResetChannel	0	static
+fsl_dma.c:145:6:DMA_SetTransferConfig	8	static
+fsl_dma.c:181:6:DMA_SetChannelLinkConfig	12	static
+fsl_dma.c:206:6:DMA_SetModulo	8	static
+fsl_dma.c:229:6:DMA_CreateHandle	16	static
+fsl_dma.c:264:6:DMA_PrepareTransfer	32	static
+fsl_dma.c:338:6:DMA_SetCallback	0	static
+fsl_dma.c:359:10:DMA_SubmitTransfer	24	static
+fsl_dma.c:386:6:DMA_AbortTransfer	0	static
+fsl_dma.c:403:6:DMA_HandleIRQ	8	static
+fsl_dma.c:416:6:DMA0_DriverIRQHandler	8	static
+fsl_dma.c:422:6:DMA1_DriverIRQHandler	8	static
+fsl_dma.c:428:6:DMA2_DriverIRQHandler	8	static
+fsl_dma.c:434:6:DMA3_DriverIRQHandler	8	static

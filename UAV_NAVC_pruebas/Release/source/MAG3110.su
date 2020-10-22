@@ -1,0 +1,5 @@
+MAG3110.c:11:9:MAG3110_read_reg	48	static
+MAG3110.c:31:6:MAG3310_write_reg	48	static
+MAG3110.c:50:6:MAG3310_init	8	static
+MAG3110.c:59:6:MAG3310_setDataRate	24	static
+MAG3110.c:84:6:MAG3310_stop	0	static

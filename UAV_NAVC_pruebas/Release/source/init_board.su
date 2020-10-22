@@ -1,0 +1,5 @@
+init_board.c:56:6:board_init	32	static
+init_board.c:125:6:board_setLed	0	static
+init_board.c:146:6:board_rs485_setRE	0	static
+init_board.c:159:6:board_rs485_setDE	0	static
+init_board.c:173:6:board_getSw	0	static
