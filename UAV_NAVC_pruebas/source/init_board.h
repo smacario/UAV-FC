@@ -76,7 +76,7 @@ typedef struct
 /** \brief inicializaci�n del hardware
  **
  **/
-void board_init(void);
+void Board_Init(void);
 
 /** \brief setea estado del led indicado
  **

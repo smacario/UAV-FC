@@ -56,7 +56,7 @@ void MAG3310_write_reg(uint8_t addr, uint8_t data)
 void MAG3110_calibration(void){
 	// Implementar calibracion de magnetometro
 
-	PRINTF("Calibrando Magnetometro...\n");
+	PRINTF("Calibrando Magnetometro...\n Mueva la placa en todas direcciones \n");
 
 	int16_t Xout_Mag_16_bit_max, Yout_Mag_16_bit_max, Zout_Mag_16_bit_max;
 	int16_t Xout_Mag_16_bit_min, Yout_Mag_16_bit_min, Zout_Mag_16_bit_min;
@@ -211,7 +211,7 @@ void SysTick_Handler(void){
 
 	milisec++;
 
-	if(milisec == 50){
+	if(milisec == 250){
 		milisec = 0;
 		DataReady = true;
 	}
