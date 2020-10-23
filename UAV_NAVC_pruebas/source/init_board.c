@@ -8,8 +8,8 @@
 
 /*==================[inclusions]=============================================*/
 #include <init_board.h>
+#include <MMA8451.h>
 #include "I2C.h"
-#include "mma8451.h"
 #include "MAG3110.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"

@@ -33,7 +33,7 @@
 
 /*==================[inclusions]=============================================*/
 #include <board.h>
-#include "mma8451.h"
+#include <MMA8451.h>
 #include "fsl_port.h"
 #include "fsl_i2c.h"
 #include "fsl_gpio.h"

@@ -1,12 +1,15 @@
+#include <MMA8451.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "mma8451.h"
 #include "fsl_i2c.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
 #include "init_board.h"
+#include "UAV_NAVC_pruebas.h"
+#include "fsl_debug_console.h"
 
+uint16_t X_Accel_offset, Y_Accel_offset, Z_Accel_offset;
 
 uint8_t mma8451_read_reg(uint8_t addr)
 {
@@ -47,8 +50,65 @@ void mma8451_write_reg(uint8_t addr, uint8_t data)
 }
 
 
-void mma8451_init(void)
+void mma8451_setDataRate(DR_enum rate)
 {
+	ACC_CTRL_REG1_t ctr_reg1;
+    bool estAct;
+
+    /* antes de modificar data rate es necesario poner ACTIVE = 0 */
+    ctr_reg1.data = mma8451_read_reg(ACC_CTRL_REG1_ADDRESS);
+
+    /* guarda valor que tiene ACTIVE y luego pone a cero */
+    estAct = ctr_reg1.ACTIVE;
+    ctr_reg1.ACTIVE = 0;
+
+	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctr_reg1.data);
+
+	/* actualiza DR y en la misma escritura va a restaurar ACTIVE */
+	ctr_reg1.DR = rate;
+	ctr_reg1.ACTIVE = estAct;
+
+	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctr_reg1.data);
+
+	/* verificación */
+	ctr_reg1.data = mma8451_read_reg(0x2a);
+}
+
+void MMA8451_calibration(void){
+
+	int16_t readAcc;
+	int16_t Xout_Accel, Yout_Accel, Zout_Accel;
+
+	while(!ACC_DataReady){}
+
+	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, 0x00);					// Stand by
+
+	// Leo datos
+	readAcc   = (int16_t)mma8451_read_reg(0x01)<<8;
+	readAcc  |= mma8451_read_reg(0x02);
+	Xout_Accel = readAcc >> 2;
+
+	readAcc   = (int16_t)mma8451_read_reg(0x03)<<8;
+	readAcc  |= mma8451_read_reg(0x04);
+	Yout_Accel = readAcc >> 2;
+
+	readAcc   = (int16_t)mma8451_read_reg(0x05)<<8;
+	readAcc  |= mma8451_read_reg(0x06);
+	Zout_Accel = readAcc >> 2;
+
+	// Calculo offset
+	X_Accel_offset = Xout_Accel / 8 * (-1);
+	Y_Accel_offset = Yout_Accel / 8 * (-1);
+	Z_Accel_offset = (Zout_Accel - SENSITIVITY_4G) / 8 * (-1);
+
+	// Escribo registros
+	mma8451_write_reg(X_OFFSET, X_Accel_offset);
+	mma8451_write_reg(Y_OFFSET, Y_Accel_offset);
+	mma8451_write_reg(Z_OFFSET, Z_Accel_offset);
+}
+
+
+void acc_init(void){
 	ACC_CTRL_REG1_t ctrl_reg1;
 	ACC_CTRL_REG4_t ctrl_reg4;
 	ACC_CTRL_REG5_t ctrl_reg5;
@@ -77,43 +137,14 @@ void mma8451_init(void)
 	ctrl_reg1.DR = 0B101;
 	ctrl_reg1.ASLP_RATE = 0B00;
     mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);
-}
 
+    PRINTF("Calibrando Acelerometro...\n");
 
-void mma8451_setDataRate(DR_enum rate)
-{
-	ACC_CTRL_REG1_t ctr_reg1;
-    bool estAct;
+    void MMA8451_calibration();
 
-    /* antes de modificar data rate es necesario poner ACTIVE = 0 */
-    ctr_reg1.data = mma8451_read_reg(ACC_CTRL_REG1_ADDRESS);
+	PRINTF("Listo\n");
 
-    /* guarda valor que tiene ACTIVE y luego pone a cero */
-    estAct = ctr_reg1.ACTIVE;
-    ctr_reg1.ACTIVE = 0;
-
-	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctr_reg1.data);
-
-	/* actualiza DR y en la misma escritura va a restaurar ACTIVE */
-	ctr_reg1.DR = rate;
-	ctr_reg1.ACTIVE = estAct;
-
-	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctr_reg1.data);
-
-	/* verificación */
-	ctr_reg1.data = mma8451_read_reg(0x2a);
-}
-
-
-void acc_init()
-{
-	mma8451_write_reg(0x2A, 0x0);
-	mma8451_write_reg(0x15, 0x0);
-	mma8451_write_reg(0x17, 0x0);
-	mma8451_write_reg(0x18, 0x0);
-	mma8451_write_reg(0x2D, 0x0);
-	mma8451_write_reg(0x2E, 0x0);
-	mma8451_init();
+	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);		// Activo
 
 }
 

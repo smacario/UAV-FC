@@ -169,7 +169,7 @@ void MAG3310_init(void){
 	// Offsets de correccion
 	MAG3110_calibration();
 
-
+	PRINTF("Listo!\n\n");
 	uint16_t sysmod = MAG3110_read_reg(0x08);
 	printf("sysmod: 0x%02hhx \n\n", sysmod);
 
