@@ -132,7 +132,7 @@ void mma8451_init(void);
 uint8_t mma8451_read_reg(uint8_t addr);
 void mma8451_write_reg(uint8_t addr, uint8_t data);
 void config_port_int1(void);
-
+void MMA8451_calibration(void);
 void mma8451_setDataRate(DR_enum rate);
 void acc_init(void);
 void acc_stop();
