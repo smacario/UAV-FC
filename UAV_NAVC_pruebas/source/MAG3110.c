@@ -199,7 +199,7 @@ void SysTick_Handler(void){
 
 	milisec++;
 
-	if(milisec == 50){
+	if(milisec == 100){
 		milisec = 0;
 		DataReady = true;
 	}
