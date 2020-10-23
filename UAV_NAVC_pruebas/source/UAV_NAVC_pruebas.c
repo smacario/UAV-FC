@@ -1,9 +1,9 @@
+#include <MMA8451.h>
 #include <stdio.h>
 
 #include "MKL43Z4.h"
 #include "init_board.h"
 #include "MAG3110.h"
-#include "mma8451.h"
 #include "board.h"
 #include "UAV_NAVC_pruebas.h"
 
@@ -16,14 +16,17 @@
 #include "fsl_port.h"
 
 
-static int16_t imu_readX, imu_readY, imu_readZ;
-static int32_t mag_readX, mag_readY, mag_readZ;
+static int16_t imu_readX, imu_readY, imu_readZ;		// Lectura de acelerometro
+static int32_t mag_readX, mag_readY, mag_readZ;		// Lectura de magnetometro
 
-static float heading_angle_rad = 0.0f;
-static float heading_angle_deg = 0.0f;
+static float heading_angle_rad = 0.0f;				// Angulo de direccion en rad
+static float heading_angle_deg = 0.0f;				// Angulo de dirección en grados
+
+
 
 Mag mag;
 Imu imu;
+
 
 
 int main(void) {
@@ -44,6 +47,8 @@ int main(void) {
     	mag.X = mag_readX - X_offset();
     	mag.Y = mag_readY - Y_offset();
     	mag.Z = mag_readZ - Z_offset();
+
+
 
     	// Revisar calibracion y calculo de angulo.
 
@@ -101,6 +106,7 @@ void PORTC_PORTD_IRQHandler(void)
     ACC_STATUS_t 		acc_status;
     MAG_STATUS_t 		mag_status;
 
+    ACC_DataReady = true;				// Flag para calibrar el acelerometro
 
     // Leo flag de interrupcion
     uint32_t PORTC_int = PORT_GetPinsInterruptFlags(PORTC);
