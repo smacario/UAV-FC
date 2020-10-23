@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chips chipVendor="NXP" family="KL4x" vendorURL="http://www.nxp.com" chipURL="">
+   <chip name="MKL43Z256xxx4" xml_file="MKL43Z4_internal.xml" chipURL=""/>
+</chips>
