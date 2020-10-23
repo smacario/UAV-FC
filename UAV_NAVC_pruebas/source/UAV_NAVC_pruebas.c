@@ -25,6 +25,8 @@ int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;
 static float heading_angle_rad = 0.0f;				// Angulo de direccion en rad
 static float heading_angle_deg = 0.0f;				// Angulo de dirección en grados
 
+static float Pitch, Roll, Yaw;
+
 
 Mag mag;
 Imu imu;
@@ -55,14 +57,18 @@ int main(void) {
     	imu.Z = imu_readZ - Z_Acc_Offset;
 
 
+    	Pitch = atan (imu.X / sqrt(imu.Y * imu.Y + imu.Z * imu.Z)) * (180.0f / _PI);
+    	Roll  = atan (imu.Y / sqrt(imu.X * imu.X + imu.Z * imu.Z)) * (180.0f / _PI);
+
     	heading_angle_rad = atan2(mag.X, mag.Y);
-    	if(heading_angle_rad >= 0) heading_angle_deg = heading_angle_rad * (180.0f / _PI);
-    	else heading_angle_deg = (heading_angle_rad + 2.0f * _PI) * (180.0f / _PI);
+    	if(heading_angle_rad >= 0) Yaw = heading_angle_rad * (180.0f / _PI);
+    	else Yaw = (heading_angle_rad + 2.0f * _PI) * (180.0f / _PI);
 
-
-    	PRINTF("ACC: x=%i, y=%i, z=%i ", imu.X, imu.Y, imu.Z);
-    	PRINTF("   Heading: %i \n", (int16_t)heading_angle_deg);
+    	PRINTF("Pitch: %i, Roll: %i, Yaw: %i \n", (int16_t)Pitch, (int16_t)Roll, (int16_t)Yaw);
+    	//PRINTF("ACC: x=%i, y=%i, z=%i \n", imu.X, imu.Y, imu.Z);
+    	//PRINTF("   Heading: %i \n", (int16_t)Yaw);
     }
+
     return 0 ;
 }
 

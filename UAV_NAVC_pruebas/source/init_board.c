@@ -113,11 +113,9 @@ void Board_Init(void)
 		GPIO_PinInit(board_gpioSw[i].gpio, board_gpioSw[i].pin, &gpio_sw_config);
 	}
 
-	/* =========== I2C =================== */
-
-	I2C_init();
-	acc_init();
-	MAG3310_init();
+	I2C_init();					// Inicializacion modulo I2C
+	acc_init();					// Inicializacion y calibracion de unidad IMU
+	MAG3310_init();				// Inicializacion y calibracion de magnetometro
 
 }
 
