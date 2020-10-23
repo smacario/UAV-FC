@@ -26,6 +26,11 @@ extern "C" {
 #define ACC_FF_MT_SRC_ADDRESS	0x16
 #define ACC_FF_MT_THS_ADDRESS	0x17
 #define ACC_FF_MT_COUNT_ADDRESS	0x18
+#define X_OFFSET				0X2F
+#define Y_OFFSET				0X30
+#define Z_OFFSET				0X31
+
+#define SENSITIVITY_4G 		4096
 
 
 
@@ -122,17 +127,14 @@ typedef union
 }ACC_CTRL_REG5_t;
 
 
-
-
 void mma8451_init(void);
 
 uint8_t mma8451_read_reg(uint8_t addr);
 void mma8451_write_reg(uint8_t addr, uint8_t data);
 void config_port_int1(void);
 
-void mma8451_init(void);
 void mma8451_setDataRate(DR_enum rate);
-void acc_init();
+void acc_init(void);
 void acc_stop();
 
 
