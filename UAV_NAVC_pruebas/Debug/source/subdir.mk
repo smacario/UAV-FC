@@ -6,27 +6,27 @@
 C_SRCS += \
 ../source/I2C.c \
 ../source/MAG3110.c \
+../source/MMA8451.c \
 ../source/UAV_NAVC_pruebas.c \
 ../source/init_board.c \
-../source/mma8451.c \
 ../source/mtb.c \
 ../source/semihost_hardfault.c 
 
 OBJS += \
 ./source/I2C.o \
 ./source/MAG3110.o \
+./source/MMA8451.o \
 ./source/UAV_NAVC_pruebas.o \
 ./source/init_board.o \
-./source/mma8451.o \
 ./source/mtb.o \
 ./source/semihost_hardfault.o 
 
 C_DEPS += \
 ./source/I2C.d \
 ./source/MAG3110.d \
+./source/MMA8451.d \
 ./source/UAV_NAVC_pruebas.d \
 ./source/init_board.d \
-./source/mma8451.d \
 ./source/mtb.d \
 ./source/semihost_hardfault.d 
 

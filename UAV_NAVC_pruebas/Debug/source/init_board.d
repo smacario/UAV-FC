@@ -6,8 +6,9 @@ source/init_board.o source/init_board.d: ../source/init_board.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_compiler.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_gcc.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/system_MKL43Z4.h \
- ../source/I2C.h ../source/mma8451.h ../source/init_board.h \
- ../source/MAG3110.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h \
+ ../source/I2C.h ../source/MAG3110.h ../source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/fsl_device_registers.h \
@@ -32,13 +33,15 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_gcc.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/system_MKL43Z4.h:
 
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h:
+
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h:
+
 ../source/I2C.h:
 
-../source/mma8451.h:
+../source/MAG3110.h:
 
 ../source/init_board.h:
-
-../source/MAG3110.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h:
 

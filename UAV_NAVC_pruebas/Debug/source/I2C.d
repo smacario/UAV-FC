@@ -13,7 +13,8 @@ source/I2C.o source/I2C.d: ../source/I2C.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_gpio.h \
- ../source/mma8451.h ../source/init_board.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/MKL43Z4.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h \
@@ -48,9 +49,9 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_gpio.h:
 
-../source/mma8451.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h:
 
-../source/init_board.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/MKL43Z4.h:
 
