@@ -69,9 +69,6 @@ void MAG3310_write_reg(uint8_t addr, uint8_t data);
 void MAG3110_calibration(void);
 void MAG3310_init(void);
 void MAG3310_setDataRate(DR_enum rate);
-int16_t X_offset(void);
-int16_t Y_offset(void);
-int16_t Z_offset(void);
 void MAG3310_stop();
 
 

@@ -19,9 +19,11 @@
 static int16_t imu_readX, imu_readY, imu_readZ;		// Lectura de acelerometro
 static int32_t mag_readX, mag_readY, mag_readZ;		// Lectura de magnetometro
 
+int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;
+int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;
+
 static float heading_angle_rad = 0.0f;				// Angulo de direccion en rad
 static float heading_angle_deg = 0.0f;				// Angulo de dirección en grados
-
 
 
 Mag mag;
@@ -44,20 +46,21 @@ int main(void) {
 
     while(1) {
 
-    	mag.X = mag_readX - X_offset();
-    	mag.Y = mag_readY - Y_offset();
-    	mag.Z = mag_readZ - Z_offset();
+    	mag.X = mag_readX - X_Mag_Offset;
+    	mag.Y = mag_readY - Y_Mag_Offset;
+    	mag.Z = mag_readZ - Z_Mag_Offset;
 
+    	imu.X = imu_readX - X_Acc_Offset;
+    	imu.Y = imu_readY - Y_Acc_Offset;
+    	imu.Z = imu_readZ - Z_Acc_Offset;
 
-
-    	// Revisar calibracion y calculo de angulo.
 
     	heading_angle_rad = atan2(mag.X, mag.Y);
     	if(heading_angle_rad >= 0) heading_angle_deg = heading_angle_rad * (180.0f / _PI);
     	else heading_angle_deg = (heading_angle_rad + 2.0f * _PI) * (180.0f / _PI);
 
 
-    	PRINTF("ACC: x=%i, y=%i, z=%i ", imu_readX, imu_readY, imu_readZ);
+    	PRINTF("ACC: x=%i, y=%i, z=%i ", imu.X, imu.Y, imu.Z);
     	PRINTF("   Heading: %i \n", (int16_t)heading_angle_deg);
     }
     return 0 ;
@@ -105,8 +108,6 @@ void PORTC_PORTD_IRQHandler(void)
     ACC_INT_SOURCE_t 	intSource;
     ACC_STATUS_t 		acc_status;
     MAG_STATUS_t 		mag_status;
-
-    ACC_DataReady = true;				// Flag para calibrar el acelerometro
 
     // Leo flag de interrupcion
     uint32_t PORTC_int = PORT_GetPinsInterruptFlags(PORTC);

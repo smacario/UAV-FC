@@ -10,9 +10,9 @@
 
 uint8_t calibration_iter = 0;
 uint16_t milisec = 0;
-bool DataReady = false;				// Flag utilizada en calibracion de magnetometro
+bool DataReady = false;									// Flag utilizada en calibracion de magnetometro
 
-int16_t Xout_Mag_16_bit_avg, Yout_Mag_16_bit_avg, Zout_Mag_16_bit_avg;
+extern int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;
 
 uint8_t MAG3110_read_reg(uint8_t addr)
 {
@@ -113,9 +113,9 @@ void MAG3110_calibration(void){
 	}
 
 
-	Xout_Mag_16_bit_avg = (Xout_Mag_16_bit_max + Xout_Mag_16_bit_min) / 2;
-	Yout_Mag_16_bit_avg = (Yout_Mag_16_bit_max + Yout_Mag_16_bit_min) / 2;
-	Zout_Mag_16_bit_avg = (Zout_Mag_16_bit_max + Zout_Mag_16_bit_min) / 2;
+	X_Mag_Offset = (Xout_Mag_16_bit_max + Xout_Mag_16_bit_min) / 2;
+	Y_Mag_Offset = (Yout_Mag_16_bit_max + Yout_Mag_16_bit_min) / 2;
+	Z_Mag_Offset = (Zout_Mag_16_bit_max + Zout_Mag_16_bit_min) / 2;
 
 /*
 	// Todo esto implementa la correccion de offset del MAG3110, no anda.
@@ -145,18 +145,6 @@ void MAG3110_calibration(void){
 
 	MAG3310_write_reg(MAG_CTRL_REG1_ADDRESS, MAG_CTRL_REG_1 | 0x01);
 */
-}
-
-int16_t X_offset(void) {
-	return Xout_Mag_16_bit_avg;
-}
-
-int16_t Y_offset(void) {
-	return Yout_Mag_16_bit_avg;
-}
-
-int16_t Z_offset(void) {
-	return Zout_Mag_16_bit_avg;
 }
 
 void MAG3310_init(void){
@@ -211,7 +199,7 @@ void SysTick_Handler(void){
 
 	milisec++;
 
-	if(milisec == 250){
+	if(milisec == 50){
 		milisec = 0;
 		DataReady = true;
 	}

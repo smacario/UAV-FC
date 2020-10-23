@@ -22,7 +22,6 @@ typedef struct{
 	int16_t Z;
 }Imu;
 
-static bool ACC_DataReady = false;					// Flag para primer dato del acelerómetro
 
 void Config_Port_Int(void);
 

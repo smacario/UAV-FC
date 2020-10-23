@@ -9,7 +9,7 @@
 #include "UAV_NAVC_pruebas.h"
 #include "fsl_debug_console.h"
 
-uint16_t X_Accel_offset, Y_Accel_offset, Z_Accel_offset;
+extern int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;
 
 uint8_t mma8451_read_reg(uint8_t addr)
 {
@@ -79,7 +79,7 @@ void MMA8451_calibration(void){
 	int16_t readAcc;
 	int16_t Xout_Accel, Yout_Accel, Zout_Accel;
 
-	while(!ACC_DataReady){}
+	PRINTF("Calibrando Acelerometro...\n");
 
 	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, 0x00);					// Stand by
 
@@ -97,14 +97,16 @@ void MMA8451_calibration(void){
 	Zout_Accel = readAcc >> 2;
 
 	// Calculo offset
-	X_Accel_offset = Xout_Accel / 8 * (-1);
-	Y_Accel_offset = Yout_Accel / 8 * (-1);
-	Z_Accel_offset = (Zout_Accel - SENSITIVITY_4G) / 8 * (-1);
-
+	X_Acc_Offset = Xout_Accel / 8;
+	Y_Acc_Offset = Yout_Accel / 8;
+	Z_Acc_Offset = (Zout_Accel - SENSITIVITY_4G) / 8;
+/*
 	// Escribo registros
 	mma8451_write_reg(X_OFFSET, X_Accel_offset);
 	mma8451_write_reg(Y_OFFSET, Y_Accel_offset);
 	mma8451_write_reg(Z_OFFSET, Z_Accel_offset);
+*/
+	PRINTF("Listo\n");
 }
 
 
@@ -138,11 +140,11 @@ void acc_init(void){
 	ctrl_reg1.ASLP_RATE = 0B00;
     mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);
 
-    PRINTF("Calibrando Acelerometro...\n");
 
-    void MMA8451_calibration();
 
-	PRINTF("Listo\n");
+    MMA8451_calibration();
+
+
 
 	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);		// Activo
 
