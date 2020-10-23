@@ -5,6 +5,7 @@
 #include "MAG3110.h"
 #include "mma8451.h"
 #include "board.h"
+#include "UAV_NAVC_pruebas.h"
 
 #include "peripherals.h"
 #include "pin_mux.h"
@@ -15,17 +16,14 @@
 #include "fsl_port.h"
 
 
-#define _PI      3.14159265358979f
-
-
 static int16_t imu_readX, imu_readY, imu_readZ;
 static int32_t mag_readX, mag_readY, mag_readZ;
-static int32_t mag_X, mag_Y, mag_Z;
-
 
 static float heading_angle_rad = 0.0f;
 static float heading_angle_deg = 0.0f;
 
+Mag mag;
+Imu imu;
 
 
 int main(void) {
@@ -37,21 +35,22 @@ int main(void) {
     BOARD_InitDebugConsole();
     SysTick_Config(SystemCoreClock / 1000U);
 
-    board_init();
-    config_port_int1();
+    Board_Init();
+    Config_Port_Int();
 
 
     while(1) {
 
-    	mag_X = mag_readX - X_offset();
-    	mag_Y = mag_readY - Y_offset();
-    	mag_Z = mag_readZ - Z_offset();
+    	mag.X = mag_readX - X_offset();
+    	mag.Y = mag_readY - Y_offset();
+    	mag.Z = mag_readZ - Z_offset();
 
-    	// Revisar calibracion y calculo de angulo. prueba
+    	// Revisar calibracion y calculo de angulo.
 
-    	heading_angle_rad = atan2(mag_Y, mag_X);
+    	heading_angle_rad = atan2(mag.X, mag.Y);
     	if(heading_angle_rad >= 0) heading_angle_deg = heading_angle_rad * (180.0f / _PI);
     	else heading_angle_deg = (heading_angle_rad + 2.0f * _PI) * (180.0f / _PI);
+
 
     	PRINTF("ACC: x=%i, y=%i, z=%i ", imu_readX, imu_readY, imu_readZ);
     	PRINTF("   Heading: %i \n", (int16_t)heading_angle_deg);
@@ -60,7 +59,7 @@ int main(void) {
 }
 
 
-void config_port_int1(void)
+void Config_Port_Int(void)
 {
 	const port_pin_config_t port_int1_config = {
 			/* Internal pull-up/down resistor is disabled */
