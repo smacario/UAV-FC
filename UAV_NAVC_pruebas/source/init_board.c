@@ -54,7 +54,7 @@ static const port_mux_t pinMuxLeds[BOARD_LED_ID_TOTAL] =
 /*==================[external functions definition]==========================*/
 
 
-void board_init(void)
+void Board_Init(void)
 {
 
 	int32_t i;
