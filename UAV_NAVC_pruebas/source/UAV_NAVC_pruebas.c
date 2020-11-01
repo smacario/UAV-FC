@@ -48,6 +48,7 @@ int main(void) {
 
     while(1) {
 
+    	// Compensacion de datos (ver implementacion por hardware)
     	mag.X = mag_readX - X_Mag_Offset;
     	mag.Y = mag_readY - Y_Mag_Offset;
     	mag.Z = mag_readZ - Z_Mag_Offset;
@@ -57,19 +58,48 @@ int main(void) {
     	imu.Z = imu_readZ - Z_Acc_Offset;
 
 
-    	Pitch = atan (imu.X / sqrt(imu.Y * imu.Y + imu.Z * imu.Z)) * (180.0f / _PI);
-    	Roll  = atan (imu.Y / sqrt(imu.X * imu.X + imu.Z * imu.Z)) * (180.0f / _PI);
-
-    	heading_angle_rad = atan2(mag.X, mag.Y);
-    	if(heading_angle_rad >= 0) Yaw = heading_angle_rad * (180.0f / _PI);
-    	else Yaw = (heading_angle_rad + 2.0f * _PI) * (180.0f / _PI);
+    	compass();
 
     	PRINTF("Pitch: %i, Roll: %i, Yaw: %i \n", (int16_t)Pitch, (int16_t)Roll, (int16_t)Yaw);
-    	//PRINTF("ACC: x=%i, y=%i, z=%i \n", imu.X, imu.Y, imu.Z);
-    	//PRINTF("   Heading: %i \n", (int16_t)Yaw);
     }
 
     return 0 ;
+}
+
+void compass(void){
+
+	float norm;
+
+	/* Calculo de Roll y Pitch */
+	Roll  = (float)atan2f(imu.Y, imu.Z) * (180.0f / _PI);
+	Pitch = (float)atan2f(-1 * imu.X, sqrt(imu.Y*imu.Y + imu.Z*imu.Z)) * (180.0f / _PI);
+
+
+	/* Compensacion y calculo de Yaw */
+	norm = norma(imu.X, imu.Y, imu.Z);
+
+	float A_Pitch = -asin(imu.X / norm);
+	float A_Roll  = asin(imu.Y / cos(A_Pitch) / norm);
+
+	norm = norma(mag.X, mag.Y, mag.Z);
+
+	float mx = mag.X/ norm;
+	float my = -1 * mag.Y/ norm;
+	float mz = mag.Z/ norm;
+
+	float MX = mx * cos(A_Pitch) + mz * sin(A_Pitch);
+	float MY = mx * sin(A_Roll) * sin(A_Pitch) + my * cos(A_Roll) - mz * sin(A_Roll) * cos(A_Pitch);
+
+	Yaw = atan2f(-1 * MY, MX) * (180.0f / _PI);
+
+	if(Yaw > 360) 		Yaw -= 360.0f;
+	else if(Yaw < 0)	Yaw += 360.0f;
+
+
+}
+
+float norma(float a, float b, float c) {
+	return sqrt(a*a + b*b + c*c);
 }
 
 

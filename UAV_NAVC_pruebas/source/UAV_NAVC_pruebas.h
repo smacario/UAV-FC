@@ -24,5 +24,7 @@ typedef struct{
 
 
 void Config_Port_Int(void);
+void compass(void);
+float norma(float a, float b, float c);
 
 #endif /* UAV_NAVC_PRUEBAS_H_ */

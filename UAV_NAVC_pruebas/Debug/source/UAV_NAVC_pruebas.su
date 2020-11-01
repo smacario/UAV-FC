@@ -5,6 +5,8 @@ fsl_port.h:243:20:PORT_SetPinConfig	32	static
 fsl_port.h:416:20:PORT_SetPinInterruptConfig	24	static
 fsl_port.h:452:24:PORT_GetPinsInterruptFlags	16	static
 fsl_port.h:463:20:PORT_ClearPinsInterruptFlags	16	static
-UAV_NAVC_pruebas.c:36:5:main	16	static
-UAV_NAVC_pruebas.c:76:6:Config_Port_Int	16	static
-UAV_NAVC_pruebas.c:110:6:PORTC_PORTD_IRQHandler	40	static
+UAV_NAVC_pruebas.c:36:5:main	32	static
+UAV_NAVC_pruebas.c:77:6:compass	56	static
+UAV_NAVC_pruebas.c:109:7:norma	32	static
+UAV_NAVC_pruebas.c:114:6:Config_Port_Int	16	static
+UAV_NAVC_pruebas.c:148:6:PORTC_PORTD_IRQHandler	40	static
