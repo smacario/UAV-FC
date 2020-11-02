@@ -155,7 +155,7 @@ void MAG3310_init(void){
 	MAG3310_write_reg(MAG_CTRL_REG1_ADDRESS, MAG_CTRL_REG_1 | 0x01);
 
 	// Offsets de correccion
-	MAG3110_calibration();
+	//MAG3110_calibration();
 
 	PRINTF("Listo!\n\n");
 	uint16_t sysmod = MAG3110_read_reg(0x08);

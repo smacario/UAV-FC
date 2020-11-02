@@ -100,17 +100,18 @@ void MMA8451_calibration(void){
 	X_Acc_Offset = Xout_Accel / 8;
 	Y_Acc_Offset = Yout_Accel / 8;
 	Z_Acc_Offset = (Zout_Accel - SENSITIVITY_4G) / 8;
-/*
+
 	// Escribo registros
-	mma8451_write_reg(X_OFFSET, X_Accel_offset);
-	mma8451_write_reg(Y_OFFSET, Y_Accel_offset);
-	mma8451_write_reg(Z_OFFSET, Z_Accel_offset);
-*/
+	//mma8451_write_reg(X_OFFSET, X_Accel_offset);
+	//mma8451_write_reg(Y_OFFSET, Y_Accel_offset);
+	//mma8451_write_reg(Z_OFFSET, Z_Accel_offset);
+
 	PRINTF("Listo\n");
 }
 
 
 void acc_init(void){
+
 	ACC_CTRL_REG1_t ctrl_reg1;
 	ACC_CTRL_REG4_t ctrl_reg4;
 	ACC_CTRL_REG5_t ctrl_reg5;
