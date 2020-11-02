@@ -26,7 +26,8 @@ source/UAV_NAVC_pruebas.o source/UAV_NAVC_pruebas.d: \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\component\serial_manager/serial_manager.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\component\serial_manager/serial_port_uart.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\component\uart/uart.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h:
 
@@ -83,3 +84,5 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\component\serial_man
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\component\uart/uart.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h:
+
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
