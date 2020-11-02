@@ -3,4 +3,4 @@ MMA8451.c:34:6:mma8451_write_reg	48	static
 MMA8451.c:53:6:mma8451_setDataRate	32	static
 MMA8451.c:77:6:MMA8451_calibration	16	static
 MMA8451.c:113:6:acc_init	32	static
-MMA8451.c:154:6:acc_stop	8	static
+MMA8451.c:155:6:acc_stop	8	static
