@@ -15,6 +15,9 @@
 #include "fsl_gpio.h"
 #include "fsl_clock.h"
 #include "pin_mux.h"
+#include "fsl_lpuart.h"
+#include "fsl_debug_console.h"
+#include "fsl_port.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -52,7 +55,6 @@ static const port_mux_t pinMuxLeds[BOARD_LED_ID_TOTAL] =
 
 
 /*==================[external functions definition]==========================*/
-
 
 void Board_Init(void)
 {
@@ -140,31 +142,6 @@ void board_setLed(board_ledId_enum id, board_ledMsg_enum msg)
     }
 }
 
-void board_rs485_setRE(board_reMsg_enum msg) {
-
-	switch(msg){
-		case BOARD_RE_MSG_OFF:
-			GPIO_PortClear(board_gpioLeds[BOARD_RE].gpio, 1<<board_gpioLeds[BOARD_RE].pin);
-		break;
-
-		case BOARD_RE_MSG_ON:
-			GPIO_PortSet(board_gpioLeds[BOARD_RE].gpio, 1<<board_gpioLeds[BOARD_RE].pin);
-		break;
-	}
-}
-
-void board_rs485_setDE(board_deMsg_enum msg) {
-
-	switch(msg){
-		case BOARD_DE_MSG_OFF:
-			GPIO_PortClear(board_gpioLeds[BOARD_DE].gpio, 1<<board_gpioLeds[BOARD_DE].pin);
-		break;
-
-		case BOARD_DE_MSG_ON:
-			GPIO_PortSet(board_gpioLeds[BOARD_DE].gpio, 1<<board_gpioLeds[BOARD_DE].pin);
-		break;
-	}
-}
 
 
 bool board_getSw(board_swId_enum id)
