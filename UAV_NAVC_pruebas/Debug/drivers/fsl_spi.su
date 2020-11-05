@@ -12,7 +12,7 @@ fsl_spi.c:252:13:SPI_SendInitialTransfer	32	static
 fsl_spi.c:279:13:SPI_SendTransfer	32	static
 fsl_spi.c:342:13:SPI_ReceiveTransfer	32	static
 fsl_spi.c:402:6:SPI_MasterGetDefaultConfig	16	static
-fsl_spi.c:445:6:SPI_MasterInit	24	static
+fsl_spi.c:445:6:SPI_MasterInit	32	static
 fsl_spi.c:506:6:SPI_SlaveGetDefaultConfig	16	static
 fsl_spi.c:548:6:SPI_SlaveInit	16	static
 fsl_spi.c:600:6:SPI_Deinit	16	static

@@ -10,10 +10,13 @@ fsl_str.c:466:16:PrintGetRadixFromobpu	24	static
 fsl_str.c:489:17:ScanIsWhiteSpace	24	static
 fsl_str.c:499:17:ScanIgnoreWhiteSpace	24	static
 fsl_str.c:514:16:ConvertRadixNumToString	64	static
-fsl_str.c:737:5:StrFormatPrintf	144	static
+fsl_str.c:626:16:ConvertFloatRadixNumToString	128	static
+fsl_str.c:737:5:StrFormatPrintf	152	static
+fsl_str.c:977:16:StrFormatScanIsFloat	24	static
 fsl_str.c:989:16:StrFormatScanIsFormatStarting	24	static
 fsl_str.c:1008:16:StrFormatScanGetBase	16	static
 fsl_str.c:1031:16:StrFormatScanCheckSymbol	24	static
 fsl_str.c:1052:16:StrFormatScanFillInteger	24	static
+fsl_str.c:1130:16:StrFormatScanFillFloat	32	static
 fsl_str.c:1153:16:StrFormatScanfStringHandling	40	static
-fsl_str.c:1317:5:StrFormatScanf	104	static
+fsl_str.c:1317:5:StrFormatScanf	120	static

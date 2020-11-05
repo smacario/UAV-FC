@@ -37,7 +37,7 @@ all: UAV_NAVC_pruebas.axf
 UAV_NAVC_pruebas.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU Linker'
-	arm-none-eabi-gcc -nostdlib -Xlinker -Map="UAV_NAVC_pruebas.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -Xlinker --sort-section=alignment -Xlinker --cref -mcpu=cortex-m0plus -mthumb -T UAV_NAVC_pruebas_Debug.ld -o "UAV_NAVC_pruebas.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -nostdlib -Xlinker -Map="UAV_NAVC_pruebas.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -Xlinker --sort-section=alignment -Xlinker --cref -mcpu=cortex-m0plus -mthumb -T UAV_NAVC_pruebas_Debug.ld -u _printf_float -u _scanf_float -o "UAV_NAVC_pruebas.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

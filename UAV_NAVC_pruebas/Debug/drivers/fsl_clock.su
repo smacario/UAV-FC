@@ -16,8 +16,8 @@ fsl_clock.c:271:6:CLOCK_SetSimConfig	16	static
 fsl_clock.c:284:6:CLOCK_EnableUsbfs0Clock	24	static
 fsl_clock.c:318:10:CLOCK_GetInternalRefClkFreq	16	static
 fsl_clock.c:334:10:CLOCK_GetPeriphClkFreq	16	static
-fsl_clock.c:359:10:CLOCK_GetOutClkFreq	16	static
+fsl_clock.c:359:10:CLOCK_GetOutClkFreq	24	static
 fsl_clock.c:391:16:CLOCK_GetMode	16	static
-fsl_clock.c:430:10:CLOCK_SetMcgliteConfig	16	static
+fsl_clock.c:430:10:CLOCK_SetMcgliteConfig	24	static
 fsl_clock.c:479:6:CLOCK_InitOsc0	32	static
 fsl_clock.c:502:6:CLOCK_DeinitOsc0	8	static

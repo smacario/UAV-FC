@@ -17,13 +17,13 @@ fsl_lpuart.c:712:10:LPUART_GetEnabledInterrupts	24	static
 fsl_lpuart.c:741:10:LPUART_GetStatusFlags	24	static
 fsl_lpuart.c:772:10:LPUART_ClearStatusFlags	24	static
 fsl_lpuart.c:825:10:LPUART_WriteBlocking	32	static
-fsl_lpuart.c:890:10:LPUART_ReadBlocking	40	static
+fsl_lpuart.c:890:10:LPUART_ReadBlocking	48	static
 fsl_lpuart.c:1009:6:LPUART_TransferCreateHandle	32	static
-fsl_lpuart.c:1074:6:LPUART_TransferStartRingBuffer	24	static
+fsl_lpuart.c:1074:6:LPUART_TransferStartRingBuffer	32	static
 fsl_lpuart.c:1101:6:LPUART_TransferStopRingBuffer	16	static
 fsl_lpuart.c:1136:10:LPUART_TransferSendNonBlocking	32	static
 fsl_lpuart.c:1175:6:LPUART_TransferAbortSend	16	static
-fsl_lpuart.c:1198:10:LPUART_TransferGetSendCount	32	static
+fsl_lpuart.c:1198:10:LPUART_TransferGetSendCount	40	static
 fsl_lpuart.c:1256:10:LPUART_TransferReceiveNonBlocking	56	static
 fsl_lpuart.c:1383:6:LPUART_TransferAbortReceive	16	static
 fsl_lpuart.c:1412:10:LPUART_TransferGetReceiveCount	32	static
