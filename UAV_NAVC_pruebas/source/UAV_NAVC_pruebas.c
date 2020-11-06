@@ -1,9 +1,10 @@
 #include <MMA8451.h>
+#include <QMC5883L.h>
 #include <stdio.h>
 
 #include "MKL43Z4.h"
 #include "init_board.h"
-#include "MAG3110.h"
+//#include "MAG3110.h"
 #include "board.h"
 #include "UAV_NAVC_pruebas.h"
 
@@ -73,7 +74,6 @@ int main(void) {
     	mag.Y = mag_readY - Y_Mag_Offset;
     	mag.Z = mag_readZ - Z_Mag_Offset;
 */
-
     	imu.X = imu_readX - X_Acc_Offset;
     	imu.Y = imu_readY - Y_Acc_Offset;
     	imu.Z = imu_readZ - Z_Acc_Offset;
@@ -84,7 +84,7 @@ int main(void) {
 		mag.Z = mag_readZ - Z_MAG_OFFSET_STATIC;
 
     	compass();
-    	TX_Message();
+    	//TX_Message();
 
 
     	/* Actualizacion de RingBuffer (solamente usado para recibir datos) */
@@ -175,12 +175,16 @@ void Config_Port_Int(void){
 		.outputLogic = 0U
 	};
 
+	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
 	PORT_SetPinConfig(ACC_INT1_PORT, ACC_INT1_PIN, &port_int1_config);
 	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
+
+	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 	GPIO_PinInit(ACC_INT1_GPIO, ACC_INT1_PIN, &gpio_int1_config);
 	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 
 	PORT_SetPinInterruptConfig(ACC_INT1_PORT, ACC_INT1_PIN, kPORT_InterruptLogicZero);
+	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
 	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
 
 	NVIC_EnableIRQ(PORTC_PORTD_IRQn);
@@ -202,13 +206,12 @@ void PORTC_PORTD_IRQHandler(void)
     uint32_t PORTC_int = PORT_GetPinsInterruptFlags(PORTC);
     uint32_t PORTD_int = PORT_GetPinsInterruptFlags(PORTD);
 
-    mag_status.data = MAG3110_read_reg(MAG_STATUS_ADDRESS);
+    mag_status.data = QMC5883L_read_reg(MAG_STATUS_FLAG_ADDRESS);
 
 
     if(PORTC_int && (1 << 5)){
 
         intSource.data  = mma8451_read_reg(ACC_INT_SOURCE_ADDRESS);
-        //mag_status.data = MAG3110_read_reg(MAG_STATUS_ADDRESS);
 
     	if (intSource.SRC_DRDY){
 			acc_status.data = mma8451_read_reg(ACC_STATUS_ADDRESS);
@@ -217,65 +220,57 @@ void PORTC_PORTD_IRQHandler(void)
 				readG   = (int16_t)mma8451_read_reg(0x01)<<8;
 				readG  |= mma8451_read_reg(0x02);
 				imu_readX = readG >> 2;
-
-				if(mag_status.XDR || mag_status.XOW){
-					readM   = (int16_t)MAG3110_read_reg(0x01)<<8;
-					readM  |= MAG3110_read_reg(0x02);
-					mag_readX = readM >> 2;
-				}
 			}
 
 			if (acc_status.YDR){
 				readG   = (int16_t)mma8451_read_reg(0x03)<<8;
 				readG  |= mma8451_read_reg(0x04);
 				imu_readY = readG >> 2;
-
-				if(mag_status.YDR || mag_status.YOW){
-					readM   = (int16_t)MAG3110_read_reg(0x03)<<8;
-					readM  |= MAG3110_read_reg(0x04);
-					mag_readY = readM >> 2;
-				}
 			}
 
 			if (acc_status.ZDR){
 				readG   = (int16_t)mma8451_read_reg(0x05)<<8;
 				readG  |= mma8451_read_reg(0x06);
 				imu_readZ = readG >> 2;
-
-				if(mag_status.ZDR || mag_status.ZOW){
-					readM   = (int16_t)MAG3110_read_reg(0x05)<<8;
-					readM  |= MAG3110_read_reg(0x06);
-					mag_readZ = readM >> 2;
-				}
 			}
 		}
 
     	PORT_ClearPinsInterruptFlags(ACC_INT1_PORT, 1<<ACC_INT1_PIN);
     }
 
-    if(PORTD_int && (1 << 1)){
+    if (mag_status.DRDY || mag_status.DOR){
 
-    	if (mag_status.XDR | mag_status.XOW){
-			readM   = (int16_t)MAG3110_read_reg(0x01)<<8;
-			readM  |= MAG3110_read_reg(0x02);
-			mag_readX = readM >> 2;
-		}
+		readM   = (int16_t)QMC5883L_read_reg(0x01)<<8;
+		readM  |= QMC5883L_read_reg(0x00);
+		mag_readX = readM;
 
-		if (mag_status.YDR | mag_status.YOW){
-			readM   = (int16_t)MAG3110_read_reg(0x03)<<8;
-			readM  |= MAG3110_read_reg(0x04);
-			mag_readY = readM >> 2;
-		}
+		readM   = (int16_t)QMC5883L_read_reg(0x03)<<8;
+		readM  |= QMC5883L_read_reg(0x02);
+		mag_readY = readM;
 
-		if (mag_status.ZDR | mag_status.ZOW){
-			readM   = (int16_t)MAG3110_read_reg(0x05)<<8;
-			readM  |= MAG3110_read_reg(0x06);
-			mag_readZ = readM >> 2;
-		}
+		readM   = (int16_t)QMC5883L_read_reg(0x05)<<8;
+		readM  |= QMC5883L_read_reg(0x04);
+		mag_readZ = readM;
+	}
 
+    if(PORTD_int && (1 << 3)){
+/*
+    	readM   = (int16_t)QMC5883L_read_reg(0x01)<<8;
+		readM  |= QMC5883L_read_reg(0x00);
+		mag_readX = readM;
+
+		readM   = (int16_t)QMC5883L_read_reg(0x03)<<8;
+		readM  |= QMC5883L_read_reg(0x02);
+		mag_readY = readM;
+
+		readM   = (int16_t)QMC5883L_read_reg(0x05)<<8;
+		readM  |= QMC5883L_read_reg(0x04);
+		mag_readZ = readM;
+
+    	PRINTF("\n\n INTERRUPCION MAGNETOMETRO \n\n");}
+*/
     	PORT_ClearPinsInterruptFlags(MAG_INT1_PORT, 1<<MAG_INT1_PIN);
     }
-
 }
 
 
