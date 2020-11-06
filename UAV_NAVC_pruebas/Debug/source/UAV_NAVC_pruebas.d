@@ -8,7 +8,8 @@ source/UAV_NAVC_pruebas.o source/UAV_NAVC_pruebas.d: \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_compiler.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_gcc.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/system_MKL43Z4.h \
- ../source/init_board.h ../source/MAG3110.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h \
+ ../source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/clock_config.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
@@ -20,6 +21,7 @@ source/UAV_NAVC_pruebas.o source/UAV_NAVC_pruebas.d: \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_gpio.h \
  ../source/UAV_NAVC_pruebas.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/peripherals.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/clock_config.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\utilities/fsl_debug_console.h \
@@ -45,9 +47,9 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_gcc.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/system_MKL43Z4.h:
 
-../source/init_board.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h:
 
-../source/MAG3110.h:
+../source/init_board.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/board.h:
 
@@ -70,6 +72,8 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_gpio.h:
 ../source/UAV_NAVC_pruebas.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/peripherals.h:
+
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h:
 

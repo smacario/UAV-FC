@@ -3,5 +3,5 @@ MAG3110.c:37:6:MAG3310_write_reg	48	static
 MAG3110.c:56:6:MAG3110_calibration	48	static
 MAG3110.c:150:6:MAG3310_init	16	static
 MAG3110.c:167:6:MAG3310_setDataRate	32	static
-MAG3110.c:192:6:MAG3310_stop	8	static
+MAG3110.c:192:6:HMC5883L	8	static
 MAG3110.c:198:6:SysTick_Handler	8	static

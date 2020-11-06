@@ -5,8 +5,8 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../source/I2C.c \
-../source/MAG3110.c \
 ../source/MMA8451.c \
+../source/QMC5883L.c \
 ../source/UAV_NAVC_pruebas.c \
 ../source/init_board.c \
 ../source/mtb.c \
@@ -14,8 +14,8 @@ C_SRCS += \
 
 OBJS += \
 ./source/I2C.o \
-./source/MAG3110.o \
 ./source/MMA8451.o \
+./source/QMC5883L.o \
 ./source/UAV_NAVC_pruebas.o \
 ./source/init_board.o \
 ./source/mtb.o \
@@ -23,8 +23,8 @@ OBJS += \
 
 C_DEPS += \
 ./source/I2C.d \
-./source/MAG3110.d \
 ./source/MMA8451.d \
+./source/QMC5883L.d \
 ./source/UAV_NAVC_pruebas.d \
 ./source/init_board.d \
 ./source/mtb.d \
