@@ -104,7 +104,9 @@ void BOARD_InitBootPins(void)
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
-- pin_list: []
+- pin_list:
+  - {pin_num: '44', peripheral: I2C1, signal: SCL, pin_signal: LCD_P21/ADC0_SE15/PTC1/LLWU_P6/RTC_CLKIN/I2C1_SCL/TPM0_CH0/I2S0_TXD0}
+  - {pin_num: '45', peripheral: I2C1, signal: SDA, pin_signal: LCD_P22/ADC0_SE11/PTC2/I2C1_SDA/TPM0_CH1/I2S0_TX_FS}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -117,6 +119,14 @@ BOARD_InitPins:
  * END ****************************************************************************************************************/
 void BOARD_InitPins(void)
 {
+    /* Port C Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortC);
+
+    /* PORTC1 (pin 44) is configured as I2C1_SCL */
+    PORT_SetPinMux(BOARD_I2S0_TXD0_PORT, BOARD_I2S0_TXD0_PIN, kPORT_MuxAlt2);
+
+    /* PORTC2 (pin 45) is configured as I2C1_SDA */
+    PORT_SetPinMux(BOARD_I2S0_TX_FS_PORT, BOARD_I2S0_TX_FS_PIN, kPORT_MuxAlt2);
 }
 
 /* clang-format off */

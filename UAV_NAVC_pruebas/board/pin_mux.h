@@ -25,6 +25,18 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
+/*! @name PORTC1 (number 44), J4[12]/A5/LCD_P21/I2S_TXD0
+  @{ */
+#define BOARD_I2S0_TXD0_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_I2S0_TXD0_PIN 1U     /*!<@brief PORTC pin index: 1 */
+                                   /* @} */
+
+/*! @name PORTC2 (number 45), J4[10]/A4/LCD_P22/I2S_TXD0
+  @{ */
+#define BOARD_I2S0_TX_FS_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_I2S0_TX_FS_PIN 2U     /*!<@brief PORTC pin index: 2 */
+                                    /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
