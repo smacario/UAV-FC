@@ -17,7 +17,7 @@
 #define LPUART_CLK_FREQ CLOCK_GetFreq(BOARD_DEBUG_UART_CLKSRC)
 #define DEMO_LPUART_IRQHandler LPUART0_IRQHandler
 
-#define RING_BUFFER_SIZE 16
+#define RING_BUFFER_SIZE 32
 #define LAST_INDEX (rxIndex - 1) % RING_BUFFER_SIZE
 
 typedef struct{

@@ -1,9 +1,10 @@
 #include <MMA8451.h>
+#include <QMC5883L.h>
 #include <stdio.h>
 
 #include "MKL43Z4.h"
 #include "init_board.h"
-#include "MAG3110.h"
+//#include "MAG3110.h"
 #include "board.h"
 #include "UAV_NAVC_pruebas.h"
 
@@ -22,7 +23,7 @@ uint8_t RingBuffer[RING_BUFFER_SIZE];
 volatile uint16_t txIndex;									// Index of the data to send out.
 volatile uint16_t rxIndex; 									// Index of the memory to save new arrived data.
 PORT port = UART0;
-uint8_t NAVC_DATA[8];
+uint8_t NAVC_DATA_BUFFER[12];
 
 static int16_t imu_readX, imu_readY, imu_readZ;				// Lectura de acelerometro
 static int32_t mag_readX, mag_readY, mag_readZ;				// Lectura de magnetometro
@@ -31,7 +32,6 @@ int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;			// Offset automatico magneto
 int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;			// Offset automatico acelerometro
 
 static float Pitch, Roll, Yaw;								// Angulos con respecto a lso ejes X, Y, Z
-
 
 Mag mag;
 Imu imu;
@@ -67,15 +67,13 @@ int main(void) {
 	LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
 	EnableIRQ(LPUART0_IRQn);
 
-    while(1) {
-
+    while(1){
+/*
     	// Compensacion de datos por calibracion automatica (ver implementacion por hardware)
-    	/*
     	mag.X = mag_readX - X_Mag_Offset;
     	mag.Y = mag_readY - Y_Mag_Offset;
     	mag.Z = mag_readZ - Z_Mag_Offset;
-    	*/
-
+*/
     	imu.X = imu_readX - X_Acc_Offset;
     	imu.Y = imu_readY - Y_Acc_Offset;
     	imu.Z = imu_readZ - Z_Acc_Offset;
@@ -86,9 +84,7 @@ int main(void) {
 		mag.Z = mag_readZ - Z_MAG_OFFSET_STATIC;
 
     	compass();
-
-    	// Transmito datos
-    	TX_Message();
+    	//TX_Message();
 
 
     	/* Actualizacion de RingBuffer (solamente usado para recibir datos) */
@@ -100,8 +96,7 @@ int main(void) {
 				txIndex %= RING_BUFFER_SIZE;
 			}
 		}
-
-    	//PRINTF("NAVC_DATA %i %i %i %i %i %i \n", NAVC_DATA[0], NAVC_DATA[1], NAVC_DATA[2], NAVC_DATA[3], NAVC_DATA[4], NAVC_DATA[5]);
+    	//PRINTF("NAVC_DATA_BUFFER %i %i %i %i %i %i \n", NAVC_DATA_BUFFER[0], NAVC_DATA_BUFFER[1], NAVC_DATA_BUFFER[2], NAVC_DATA_BUFFER[3], NAVC_DATA_BUFFER[4], NAVC_DATA_BUFFER[5]);
     }
 
     return 0 ;
@@ -121,7 +116,7 @@ void compass(void){
 	norm = sqrt(imu.X*imu.X + imu.Y*imu.Y + imu.Z*imu.Z);
 
 	float A_Pitch = -asin(imu.X / norm);
-	float A_Roll  = asin(imu.Y / cos(A_Pitch) / norm);
+	float A_Roll  =  asin(imu.Y / cos(A_Pitch) / norm);
 
 	norm = sqrt(mag.X*mag.X + mag.Y*mag.Y + mag.Z*mag.Z);
 
@@ -152,20 +147,11 @@ void TX_Message(){
 	// Armo el mensaje a transmitir, uso los bits 0 y 7 para inicio y fin de trama.
 	// Los datos de 16 bits los separo en HIGH y LOW respectivamente.
 
-	NAVC_DATA[0] = 60;	// Inicio de trama
+	char buffer[16];
 
-	NAVC_DATA[1] = ((int16_t)Pitch) >> 8;
-	NAVC_DATA[2] = ((int16_t)Pitch) & 0xFF;
-
-	NAVC_DATA[3] = ((int16_t)Roll) >> 8;
-	NAVC_DATA[4] = ((int16_t)Roll) & 0xFF;
-
-	NAVC_DATA[5] = ((int16_t)Yaw) >> 8;
-	NAVC_DATA[6] = ((int16_t)Yaw) & 0xFF;
-
-	NAVC_DATA[7] = 61;	// Fin de trama
-
-	TX_Data(NAVC_DATA, sizeof(NAVC_DATA));
+	sprintf(buffer, "%3.2f %3.2f %3.2f", Pitch, Roll, Yaw);
+	PRINTF("%s \n", buffer);
+	TX_Data(buffer, sizeof(buffer));
 
 }
 
@@ -189,14 +175,16 @@ void Config_Port_Int(void){
 		.outputLogic = 0U
 	};
 
+	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
 	PORT_SetPinConfig(ACC_INT1_PORT, ACC_INT1_PIN, &port_int1_config);
 	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
+
+	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 	GPIO_PinInit(ACC_INT1_GPIO, ACC_INT1_PIN, &gpio_int1_config);
 	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 
-	/* Interrupt polarity active high, or active low. Default value: 0.
-	   0: Active low; 1: Active high. VER REGISTRO CTRL_REG3 */
 	PORT_SetPinInterruptConfig(ACC_INT1_PORT, ACC_INT1_PIN, kPORT_InterruptLogicZero);
+	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
 	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
 
 	NVIC_EnableIRQ(PORTC_PORTD_IRQn);
@@ -218,13 +206,12 @@ void PORTC_PORTD_IRQHandler(void)
     uint32_t PORTC_int = PORT_GetPinsInterruptFlags(PORTC);
     uint32_t PORTD_int = PORT_GetPinsInterruptFlags(PORTD);
 
-    mag_status.data = MAG3110_read_reg(MAG_STATUS_ADDRESS);
+    mag_status.data = QMC5883L_read_reg(MAG_STATUS_FLAG_ADDRESS);
 
 
     if(PORTC_int && (1 << 5)){
 
         intSource.data  = mma8451_read_reg(ACC_INT_SOURCE_ADDRESS);
-        //mag_status.data = MAG3110_read_reg(MAG_STATUS_ADDRESS);
 
     	if (intSource.SRC_DRDY){
 			acc_status.data = mma8451_read_reg(ACC_STATUS_ADDRESS);
@@ -233,68 +220,57 @@ void PORTC_PORTD_IRQHandler(void)
 				readG   = (int16_t)mma8451_read_reg(0x01)<<8;
 				readG  |= mma8451_read_reg(0x02);
 				imu_readX = readG >> 2;
-
-				if(mag_status.XDR || mag_status.XOW){
-					readM   = (int16_t)MAG3110_read_reg(0x01)<<8;
-					readM  |= MAG3110_read_reg(0x02);
-					mag_readX = readM >> 2;
-				}
-
 			}
 
 			if (acc_status.YDR){
 				readG   = (int16_t)mma8451_read_reg(0x03)<<8;
 				readG  |= mma8451_read_reg(0x04);
 				imu_readY = readG >> 2;
-
-				if(mag_status.YDR || mag_status.YOW){
-					readM   = (int16_t)MAG3110_read_reg(0x03)<<8;
-					readM  |= MAG3110_read_reg(0x04);
-					mag_readY = readM >> 2;
-				}
-
 			}
 
 			if (acc_status.ZDR){
 				readG   = (int16_t)mma8451_read_reg(0x05)<<8;
 				readG  |= mma8451_read_reg(0x06);
 				imu_readZ = readG >> 2;
-
-				if(mag_status.ZDR || mag_status.ZOW){
-					readM   = (int16_t)MAG3110_read_reg(0x05)<<8;
-					readM  |= MAG3110_read_reg(0x06);
-					mag_readZ = readM >> 2;
-				}
-
 			}
 		}
 
     	PORT_ClearPinsInterruptFlags(ACC_INT1_PORT, 1<<ACC_INT1_PIN);
     }
 
-    if(PORTD_int && (1 << 1)){
+    if (mag_status.DRDY || mag_status.DOR){
 
-    	if (mag_status.XDR | mag_status.XOW){
-			readM   = (int16_t)MAG3110_read_reg(0x01)<<8;
-			readM  |= MAG3110_read_reg(0x02);
-			mag_readX = readM >> 2;
-		}
+		readM   = (int16_t)QMC5883L_read_reg(0x01)<<8;
+		readM  |= QMC5883L_read_reg(0x00);
+		mag_readX = readM;
 
-		if (mag_status.YDR | mag_status.YOW){
-			readM   = (int16_t)MAG3110_read_reg(0x03)<<8;
-			readM  |= MAG3110_read_reg(0x04);
-			mag_readY = readM >> 2;
-		}
+		readM   = (int16_t)QMC5883L_read_reg(0x03)<<8;
+		readM  |= QMC5883L_read_reg(0x02);
+		mag_readY = readM;
 
-		if (mag_status.ZDR | mag_status.ZOW){
-			readM   = (int16_t)MAG3110_read_reg(0x05)<<8;
-			readM  |= MAG3110_read_reg(0x06);
-			mag_readZ = readM >> 2;
-		}
+		readM   = (int16_t)QMC5883L_read_reg(0x05)<<8;
+		readM  |= QMC5883L_read_reg(0x04);
+		mag_readZ = readM;
+	}
 
+    if(PORTD_int && (1 << 3)){
+/*
+    	readM   = (int16_t)QMC5883L_read_reg(0x01)<<8;
+		readM  |= QMC5883L_read_reg(0x00);
+		mag_readX = readM;
+
+		readM   = (int16_t)QMC5883L_read_reg(0x03)<<8;
+		readM  |= QMC5883L_read_reg(0x02);
+		mag_readY = readM;
+
+		readM   = (int16_t)QMC5883L_read_reg(0x05)<<8;
+		readM  |= QMC5883L_read_reg(0x04);
+		mag_readZ = readM;
+
+    	PRINTF("\n\n INTERRUPCION MAGNETOMETRO \n\n");}
+*/
     	PORT_ClearPinsInterruptFlags(MAG_INT1_PORT, 1<<MAG_INT1_PIN);
     }
-
 }
 
 
