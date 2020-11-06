@@ -9,8 +9,8 @@
 /*==================[inclusions]=============================================*/
 #include <init_board.h>
 #include <MMA8451.h>
+#include <QMC5883L.h>
 #include "I2C.h"
-#include "MAG3110.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
 #include "fsl_clock.h"
@@ -117,7 +117,7 @@ void Board_Init(void)
 
 	I2C_init();					// Inicializacion modulo I2C
 	acc_init();					// Inicializacion y calibracion de unidad IMU
-	MAG3310_init();				// Inicializacion y calibracion de magnetometro
+	QMC5883L_init();
 
 }
 
