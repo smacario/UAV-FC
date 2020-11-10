@@ -1,28 +1,23 @@
-/*
- * HMC5883L.c
- *
- *  Created on: 4 Nov 2020
- *      Author: Santiago
- */
-
-
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "fsl_i2c.h"
-#include "fsl_port.h"
-#include "fsl_gpio.h"
+
 #include "QMC5883L.h"
 #include "peripherals.h"
 #include "init_board.h"
+
 #include "UAV_NAVC_pruebas.h"
 #include "fsl_debug_console.h"
+#include "fsl_i2c.h"
+#include "fsl_port.h"
+#include "fsl_gpio.h"
 
-uint8_t calibration_iter = 0;
-uint16_t milisec = 0;
-bool DataReady = false;									// Flag utilizada en calibracion de magnetometro
+uint8_t calibration_iter = 0;								// Iteraciones para la autocalibracion
+uint16_t milisec = 0;										// Contador para interrupcion de SysTick
+bool DataReady = false;										// Flag utilizada en calibracion de magnetometro
 
-extern int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;
+extern int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;	// Offset calculado en autocalibracion
+
 
 uint8_t QMC5883L_read_reg(uint8_t addr)
 {
@@ -44,7 +39,6 @@ uint8_t QMC5883L_read_reg(uint8_t addr)
 }
 
 
-
 void QMC5883L_write_reg(uint8_t addr, uint8_t data)
 {
 	i2c_master_transfer_t masterXfer;
@@ -62,6 +56,7 @@ void QMC5883L_write_reg(uint8_t addr, uint8_t data)
     I2C_MasterTransferBlocking(I2C1_PERIPHERAL, &masterXfer);
     //PRINTF("Se escribio en 0x%02hhx el valor 0x%02hhx\n",addr,data);
 }
+
 
 void QMC5883L_calibration(void){
 	// Implementar calibracion de magnetometro
@@ -140,12 +135,9 @@ void QMC5883L_init(void){
 	QMC5883L_write_reg(MAG_CTRL1_REG_ADDRESS, 0x1D);
 
 	QMC5883L_read_reg(MAG_STATUS_FLAG_ADDRESS);			// Leo flag de status
-
-	QMC5883L_calibration();								// RUtina de calibracion
+	//QMC5883L_calibration();								// Rutina de calibracion
 
 }
-
-
 
 
 void SysTick_Handler(void){

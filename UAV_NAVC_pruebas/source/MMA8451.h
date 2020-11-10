@@ -4,18 +4,17 @@
 #include "stdint.h"
 #include "init_board.h"
 
-/*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*==================[macros]=================================================*/
 
-#define MMA8451_I2C     I2C0
+
+#define MMA8451_I2C     		I2C0
 #define MMA8451_I2C_ADDRESS     (0x1d)
 
-#define ACC_INT1_PORT       PORTC
-#define ACC_INT1_GPIO       GPIOC
-#define ACC_INT1_PIN        5
+#define ACC_INT1_PORT       	PORTC
+#define ACC_INT1_GPIO       	GPIOC
+#define ACC_INT1_PIN        	5
 
 #define ACC_CTRL_REG1_ADDRESS   0X2A
 #define ACC_CTRL_REG5_ADDRESS   0X2E
@@ -30,7 +29,7 @@ extern "C" {
 #define Y_OFFSET				0X30
 #define Z_OFFSET				0X31
 
-#define SENSITIVITY_4G 		4096
+#define SENSITIVITY_4G 			4096
 
 
 
@@ -50,6 +49,7 @@ typedef union
     uint8_t data;
 }ACC_INT_SOURCE_t;
 
+
 typedef union
 {
     struct
@@ -66,6 +66,7 @@ typedef union
     uint8_t data;
 }ACC_STATUS_t	;
 
+
 typedef union
 {
     struct
@@ -81,6 +82,7 @@ typedef union
     uint8_t data;
 }ACC_FF_MT_CFG_t	;
 
+
 typedef union
 {
     struct
@@ -93,6 +95,7 @@ typedef union
     };
     uint8_t data;
 }ACC_CTRL_REG1_t;
+
 
 typedef union
 {
@@ -109,6 +112,7 @@ typedef union
     };
     uint8_t data;
 }ACC_CTRL_REG4_t;
+
 
 typedef union
 {
@@ -138,10 +142,8 @@ void acc_init(void);
 void acc_stop();
 
 
-/*==================[cplusplus]==============================================*/
 #ifdef __cplusplus
 }
 #endif
 
-/*==================[end of file]============================================*/
 #endif /* MMA8451_H_ */
