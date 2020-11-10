@@ -1,7 +1,7 @@
 fsl_clock.h:438:20:CLOCK_EnableClock	24	static
 fsl_gpio.h:162:20:GPIO_PinWrite	32	static
 fsl_port.h:243:20:PORT_SetPinConfig	32	static
-I2C.c:64:13:i2c_release_bus_delay	16	static
-I2C.c:80:13:I2C_releaseBus	16	static
-I2C.c:131:13:I2C_configPins	16	static
-I2C.c:162:6:I2C_init	24	static
+I2C.c:23:13:i2c_release_bus_delay	16	static
+I2C.c:39:13:I2C_releaseBus	16	static
+I2C.c:90:13:I2C_configPins	16	static
+I2C.c:121:6:I2C_init	24	static

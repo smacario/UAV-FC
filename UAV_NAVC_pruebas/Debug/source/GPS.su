@@ -1,0 +1,3 @@
+GPS.c:27:6:Tx_GPS	16	static
+GPS.c:34:6:_GPS	128	static
+GPS.c:51:6:UART2_FLEXIO_IRQHandler	16	static

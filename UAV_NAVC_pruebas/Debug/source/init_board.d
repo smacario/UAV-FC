@@ -10,6 +10,7 @@ source/init_board.o source/init_board.d: ../source/init_board.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h \
  ../source/I2C.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/fsl_device_registers.h \
@@ -18,7 +19,6 @@ source/init_board.o source/init_board.d: ../source/init_board.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_gpio.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\utilities/fsl_debug_console.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
@@ -48,6 +48,8 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h:
 
 ../source/I2C.h:
 
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h:
+
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h:
@@ -63,8 +65,6 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h:
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_gpio.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h:
-
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
 

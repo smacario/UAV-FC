@@ -2,14 +2,17 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+
 #include "fsl_i2c.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+
 #include "init_board.h"
 #include "UAV_NAVC_pruebas.h"
 #include "fsl_debug_console.h"
 
-extern int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;
+extern int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;				// Offset automatico generado por la rutina de autocalibracion
+
 
 uint8_t mma8451_read_reg(uint8_t addr)
 {
@@ -49,30 +52,6 @@ void mma8451_write_reg(uint8_t addr, uint8_t data)
     //printf("Se escribio en 0x%02hhx el valor 0x%02hhx\n",addr,data);
 }
 
-
-void mma8451_setDataRate(DR_enum rate)
-{
-	ACC_CTRL_REG1_t ctr_reg1;
-    bool estAct;
-
-    /* antes de modificar data rate es necesario poner ACTIVE = 0 */
-    ctr_reg1.data = mma8451_read_reg(ACC_CTRL_REG1_ADDRESS);
-
-    /* guarda valor que tiene ACTIVE y luego pone a cero */
-    estAct = ctr_reg1.ACTIVE;
-    ctr_reg1.ACTIVE = 0;
-
-	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctr_reg1.data);
-
-	/* actualiza DR y en la misma escritura va a restaurar ACTIVE */
-	ctr_reg1.DR = rate;
-	ctr_reg1.ACTIVE = estAct;
-
-	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctr_reg1.data);
-
-	/* verificación */
-	ctr_reg1.data = mma8451_read_reg(0x2a);
-}
 
 void MMA8451_calibration(void){
 
@@ -141,19 +120,14 @@ void acc_init(void){
 	ctrl_reg1.ASLP_RATE = 0B00;
     mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);
 
-
-
     MMA8451_calibration();
 
-
-
-	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);		// Activo
+	mma8451_write_reg(ACC_CTRL_REG1_ADDRESS, ctrl_reg1.data);		// Modo activo
 
 }
 
 
-void acc_stop()
-{
+void acc_stop(){
 	mma8451_write_reg(0x2A, 0x0);
 	config_port_int1();
 }

@@ -107,6 +107,8 @@ BOARD_InitPins:
 - pin_list:
   - {pin_num: '44', peripheral: I2C1, signal: SCL, pin_signal: LCD_P21/ADC0_SE15/PTC1/LLWU_P6/RTC_CLKIN/I2C1_SCL/TPM0_CH0/I2S0_TXD0}
   - {pin_num: '45', peripheral: I2C1, signal: SDA, pin_signal: LCD_P22/ADC0_SE11/PTC2/I2C1_SDA/TPM0_CH1/I2S0_TX_FS}
+  - {pin_num: '61', peripheral: UART2, signal: RX, pin_signal: LCD_P44/PTD4/LLWU_P14/SPI1_SS/UART2_RX/TPM0_CH4/FXIO0_D4, identifier: ''}
+  - {pin_num: '62', peripheral: UART2, signal: TX, pin_signal: LCD_P45/ADC0_SE6b/PTD5/SPI1_SCK/UART2_TX/TPM0_CH5/FXIO0_D5, identifier: ''}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -121,12 +123,20 @@ void BOARD_InitPins(void)
 {
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
+    /* Port D Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortD);
 
     /* PORTC1 (pin 44) is configured as I2C1_SCL */
     PORT_SetPinMux(BOARD_I2S0_TXD0_PORT, BOARD_I2S0_TXD0_PIN, kPORT_MuxAlt2);
 
     /* PORTC2 (pin 45) is configured as I2C1_SDA */
     PORT_SetPinMux(BOARD_I2S0_TX_FS_PORT, BOARD_I2S0_TX_FS_PIN, kPORT_MuxAlt2);
+
+    /* PORTD4 (pin 61) is configured as UART2_RX */
+    PORT_SetPinMux(PORTD, 4U, kPORT_MuxAlt3);
+
+    /* PORTD5 (pin 62) is configured as UART2_TX */
+    PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt3);
 }
 
 /* clang-format off */

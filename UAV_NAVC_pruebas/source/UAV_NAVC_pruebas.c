@@ -1,29 +1,31 @@
-#include <MMA8451.h>
-#include <QMC5883L.h>
+
+/*  Proyecto UAV-NAVC  */
+
 #include <stdio.h>
+#include "math.h"
 
 #include "MKL43Z4.h"
-#include "init_board.h"
-//#include "MAG3110.h"
 #include "board.h"
-#include "UAV_NAVC_pruebas.h"
-
+#include "init_board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
 #include "clock_config.h"
 
-#include "math.h"
+#include <MMA8451.h>
+#include <QMC5883L.h>
+#include <GPS.h>
+#include <UAV_NAVC_pruebas.h>
+
 #include "fsl_debug_console.h"
 #include "fsl_port.h"
-
 #include "fsl_lpuart.h"
+#include "fsl_uart.h"
 
 
-uint8_t RingBuffer[RING_BUFFER_SIZE];
-volatile uint16_t txIndex;									// Index of the data to send out.
-volatile uint16_t rxIndex; 									// Index of the memory to save new arrived data.
-PORT port = UART0;
-uint8_t NAVC_DATA_BUFFER[12];
+uint8_t RxBuffer[LPUART_RING_BUFFER_SIZE];					// Buffer de Rx para LPUART0
+volatile uint16_t txIndex;									// Index de Tx
+volatile uint16_t rxIndex; 									// Index de Rx
+uint8_t NAVC_DATA_BUFFER[12];								// Buffer de datos de la NAVC
 
 static int16_t imu_readX, imu_readY, imu_readZ;				// Lectura de acelerometro
 static int32_t mag_readX, mag_readY, mag_readZ;				// Lectura de magnetometro
@@ -31,10 +33,12 @@ static int32_t mag_readX, mag_readY, mag_readZ;				// Lectura de magnetometro
 int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;			// Offset automatico magnetometro
 int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;			// Offset automatico acelerometro
 
-static float Pitch, Roll, Yaw;								// Angulos con respecto a lso ejes X, Y, Z
+static float Pitch, Roll, Yaw;								// Angulos con respecto a los ejes X, Y, Z
 
-Mag mag;
-Imu imu;
+Mag mag;													// Datos del magnetometro
+Imu imu;													// Datos del acelerometro
+
+GPS_Data GPS;												// Datos del GPS
 
 
 int main(void) {
@@ -49,27 +53,10 @@ int main(void) {
     Board_Init();
     Config_Port_Int();
 
-    /* Configuracion del puerto LPUART0 */
-    lpuart_config_t config;
-
-    uint16_t tmprxIndex = rxIndex;
-    uint16_t tmptxIndex = txIndex;
-
-	LPUART_GetDefaultConfig(&config);
-	config.baudRate_Bps = BOARD_DEBUG_UART_BAUDRATE;
-	config.enableTx     = true;
-	config.enableRx     = true;
-
-	LPUART_Init(LPUART0, &config, LPUART_CLK_FREQ);
-
-
-	/* Enable RX interrupt. */
-	LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
-	EnableIRQ(LPUART0_IRQn);
-
     while(1){
-/*
+
     	// Compensacion de datos por calibracion automatica (ver implementacion por hardware)
+/*
     	mag.X = mag_readX - X_Mag_Offset;
     	mag.Y = mag_readY - Y_Mag_Offset;
     	mag.Z = mag_readZ - Z_Mag_Offset;
@@ -85,9 +72,8 @@ int main(void) {
 
     	compass();
     	//TX_Message();
-
-
-    	/* Actualizacion de RingBuffer (solamente usado para recibir datos) */
+    	_GPS();
+/*
     	if (kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
 			tmprxIndex = rxIndex;
 			tmptxIndex = txIndex;
@@ -96,6 +82,7 @@ int main(void) {
 				txIndex %= RING_BUFFER_SIZE;
 			}
 		}
+*/
     	//PRINTF("NAVC_DATA_BUFFER %i %i %i %i %i %i \n", NAVC_DATA_BUFFER[0], NAVC_DATA_BUFFER[1], NAVC_DATA_BUFFER[2], NAVC_DATA_BUFFER[3], NAVC_DATA_BUFFER[4], NAVC_DATA_BUFFER[5]);
     }
 
@@ -134,6 +121,7 @@ void compass(void){
 
 }
 
+
 void TX_Data(uint8_t data[], uint16_t size){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
 		LPUART_WriteBlocking(LPUART0, data, size / sizeof(uint8_t));
@@ -142,15 +130,14 @@ void TX_Data(uint8_t data[], uint16_t size){
 	rxIndex = 0;
 }
 
-void TX_Message(){
 
-	// Armo el mensaje a transmitir, uso los bits 0 y 7 para inicio y fin de trama.
-	// Los datos de 16 bits los separo en HIGH y LOW respectivamente.
+/*  Funcion que transmite los datos de la NAVC por UART  */
+void TX_Message(){
 
 	char buffer[16];
 
 	sprintf(buffer, "%3.2f %3.2f %3.2f", Pitch, Roll, Yaw);
-	PRINTF("%s \n", buffer);
+	//PRINTF("%s \n", buffer);
 	TX_Data(buffer, sizeof(buffer));
 
 }
@@ -175,23 +162,33 @@ void Config_Port_Int(void){
 		.outputLogic = 0U
 	};
 
+
+	/*	Configuracion de interrupciones del sistema	  */
+
+
 	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
 	PORT_SetPinConfig(ACC_INT1_PORT, ACC_INT1_PIN, &port_int1_config);
-	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
 
 	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 	GPIO_PinInit(ACC_INT1_GPIO, ACC_INT1_PIN, &gpio_int1_config);
-	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 
 	PORT_SetPinInterruptConfig(ACC_INT1_PORT, ACC_INT1_PIN, kPORT_InterruptLogicZero);
 	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
-	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
+
+	LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
+	UART_EnableInterrupts(UART2, kUART_RxDataRegFullInterruptEnable);
 
 	NVIC_EnableIRQ(PORTC_PORTD_IRQn);
-	NVIC_SetPriority(PORTC_PORTD_IRQn, 0);
+	EnableIRQ(LPUART0_IRQn);
+	EnableIRQ(UART2_FLEXIO_IRQn);
+
+	NVIC_SetPriority(UART2_FLEXIO_IRQn, 0);		// Interrupcion de UART2 (GPS).		Maxima prioridad, stream de datos
+	NVIC_SetPriority(PORTC_PORTD_IRQn, 1);		// Interrupcion de Mag y Acc. 		Media prioridad, datos en registros
+	NVIC_SetPriority(LPUART0_IRQn, 2);			// Interrupcion de LPUART0 (PC)		Baja prioridad, debug
 }
 
 
+/* Handler de la interrupcion de perifericos en PORTC y PORTD, Mag y Acc  */
 void PORTC_PORTD_IRQHandler(void)
 {
 	// Interruption Handler para Magnetometro y Acelerometro
@@ -220,24 +217,36 @@ void PORTC_PORTD_IRQHandler(void)
 				readG   = (int16_t)mma8451_read_reg(0x01)<<8;
 				readG  |= mma8451_read_reg(0x02);
 				imu_readX = readG >> 2;
+
+				readM   = (int16_t)QMC5883L_read_reg(0x01)<<8;
+				readM  |= QMC5883L_read_reg(0x00);
+				mag_readX = readM;
 			}
 
 			if (acc_status.YDR){
 				readG   = (int16_t)mma8451_read_reg(0x03)<<8;
 				readG  |= mma8451_read_reg(0x04);
 				imu_readY = readG >> 2;
+
+				readM   = (int16_t)QMC5883L_read_reg(0x03)<<8;
+				readM  |= QMC5883L_read_reg(0x02);
+				mag_readY = readM;
 			}
 
 			if (acc_status.ZDR){
 				readG   = (int16_t)mma8451_read_reg(0x05)<<8;
 				readG  |= mma8451_read_reg(0x06);
 				imu_readZ = readG >> 2;
+
+				readM   = (int16_t)QMC5883L_read_reg(0x05)<<8;
+				readM  |= QMC5883L_read_reg(0x04);
+				mag_readZ = readM;
 			}
 		}
 
     	PORT_ClearPinsInterruptFlags(ACC_INT1_PORT, 1<<ACC_INT1_PIN);
     }
-
+/*
     if (mag_status.DRDY || mag_status.DOR){
 
 		readM   = (int16_t)QMC5883L_read_reg(0x01)<<8;
@@ -252,6 +261,7 @@ void PORTC_PORTD_IRQHandler(void)
 		readM  |= QMC5883L_read_reg(0x04);
 		mag_readZ = readM;
 	}
+*/
 
     if(PORTD_int && (1 << 3)){
 /*
@@ -274,6 +284,7 @@ void PORTC_PORTD_IRQHandler(void)
 }
 
 
+/* Handler de la interrupcion de LPUART0, conexión con PC  */
 void LPUART0_IRQHandler(void)
 {
     uint8_t data;
@@ -288,7 +299,7 @@ void LPUART0_IRQHandler(void)
         /* If ring buffer is not full, add data to ring buffer. */
         if (((tmprxIndex + 1) % RING_BUFFER_SIZE) != tmptxIndex)
         {
-            RingBuffer[rxIndex] = data;
+            RxBuffer[rxIndex] = data;
             rxIndex++;
             rxIndex %= RING_BUFFER_SIZE;
         }

@@ -10,14 +10,14 @@
 
 #define _PI      3.14159265358979f
 
-#define X_MAG_OFFSET_STATIC    	(int16_t)-1054
-#define Y_MAG_OFFSET_STATIC		(int16_t) 1018
-#define Z_MAG_OFFSET_STATIC		(int16_t) 552
+#define X_MAG_OFFSET_STATIC		(int16_t)153
+#define Y_MAG_OFFSET_STATIC		(int16_t)-180
+#define Z_MAG_OFFSET_STATIC		(int16_t)-92
 
 #define LPUART_CLK_FREQ CLOCK_GetFreq(BOARD_DEBUG_UART_CLKSRC)
 #define DEMO_LPUART_IRQHandler LPUART0_IRQHandler
 
-#define RING_BUFFER_SIZE 32
+#define LPUART_RING_BUFFER_SIZE 128
 #define LAST_INDEX (rxIndex - 1) % RING_BUFFER_SIZE
 
 typedef struct{
@@ -32,14 +32,11 @@ typedef struct{
 	int16_t Z;
 }Imu;
 
-typedef enum{						// Estados de Puertos disponibles
-	UART0 = 0,
-	UART1,
-}PORT;
 
 void Config_Port_Int(void);
 void compass(void);
 void TX_Data(uint8_t data[], uint16_t size);
 void TX_Message();
+
 
 #endif /* UAV_NAVC_PRUEBAS_H_ */

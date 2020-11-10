@@ -1,65 +1,24 @@
-/* Copyright 2018, DSI FCEIA UNR - Sistemas Digitales 2
- *    DSI: http://www.dsi.fceia.unr.edu.ar/
- * Copyright 2018, Gustavo Muro
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the copyright holder nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- */
-
-/*==================[inclusions]=============================================*/
 #include <board.h>
 #include <MMA8451.h>
+
 #include "fsl_port.h"
 #include "fsl_i2c.h"
 #include "fsl_gpio.h"
 #include "fsl_clock.h"
+
 #include "pin_mux.h"
 
-/*==================[macros and definitions]=================================*/
-#define I2C_RELEASE_SDA_PORT PORTE
-#define I2C_RELEASE_SCL_PORT PORTE
-#define I2C_RELEASE_SDA_GPIO GPIOE
-#define I2C_RELEASE_SDA_PIN 25U
-#define I2C_RELEASE_SCL_GPIO GPIOE
-#define I2C_RELEASE_SCL_PIN 24U
-#define I2C_RELEASE_BUS_COUNT 100U
 
-#define I2C_BAUDRATE 			100000U
+#define I2C_RELEASE_SDA_PORT 		PORTE
+#define I2C_RELEASE_SCL_PORT 		PORTE
+#define I2C_RELEASE_SDA_GPIO 		GPIOE
+#define I2C_RELEASE_SDA_PIN 		25U
+#define I2C_RELEASE_SCL_GPIO 		GPIOE
+#define I2C_RELEASE_SCL_PIN 		24U
+#define I2C_RELEASE_BUS_COUNT 		100U
 
-/*==================[internal data declaration]==============================*/
+#define I2C_BAUDRATE 				100000U
 
-/*==================[internal functions declaration]=========================*/
-
-/*==================[internal data definition]===============================*/
-
-/*==================[external data definition]===============================*/
-
-/*==================[internal functions definition]==========================*/
 
 static void i2c_release_bus_delay(void)
 {
@@ -157,7 +116,7 @@ static void I2C_configPins(void)
 	PORT_SetPinConfig(PORTE, 25U, &porte25_pin32_config);
 
 }
-/*==================[external functions definition]==========================*/
+
 
 void I2C_init(void)
 {
@@ -168,12 +127,6 @@ void I2C_init(void)
 
 	I2C_configPins();
 
-	/*
-	 * masterConfig.baudRate_Bps = 100000U;
-	 * masterConfig.enableStopHold = false;
-	 * masterConfig.glitchFilterWidth = 0U;
-	 * masterConfig.enableMaster = true;
-	 */
 	I2C_MasterGetDefaultConfig(&masterConfig);
 
 	masterConfig.baudRate_Bps = I2C_BAUDRATE;
@@ -183,4 +136,4 @@ void I2C_init(void)
 	I2C_MasterInit(I2C0, &masterConfig, sourceClock);
 }
 
-/*==================[end of file]============================================*/
+
