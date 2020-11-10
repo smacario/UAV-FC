@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/GPS.c \
 ../source/I2C.c \
 ../source/MMA8451.c \
 ../source/QMC5883L.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 ../source/semihost_hardfault.c 
 
 OBJS += \
+./source/GPS.o \
 ./source/I2C.o \
 ./source/MMA8451.o \
 ./source/QMC5883L.o \
@@ -22,6 +24,7 @@ OBJS += \
 ./source/semihost_hardfault.o 
 
 C_DEPS += \
+./source/GPS.d \
 ./source/I2C.d \
 ./source/MMA8451.d \
 ./source/QMC5883L.d \
