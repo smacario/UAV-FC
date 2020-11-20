@@ -70,9 +70,9 @@ int main(void) {
 		mag.Y = mag_readY - Y_MAG_OFFSET_STATIC;
 		mag.Z = mag_readZ - Z_MAG_OFFSET_STATIC;
 
-    	compass();
+    	Compass();
     	//TX_Message();
-    	_GPS();
+    	GPS_NMEA_Data_Unpacker(&GPS);
 /*
     	if (kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
 			tmprxIndex = rxIndex;
@@ -90,7 +90,7 @@ int main(void) {
 }
 
 
-void compass(void){
+void Compass(void){
 
 	float norm;
 
@@ -122,9 +122,9 @@ void compass(void){
 }
 
 
-void TX_Data(uint8_t data[], uint16_t size){
+void TX_Data(char data[], uint16_t size){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
-		LPUART_WriteBlocking(LPUART0, data, size / sizeof(uint8_t));
+		LPUART_WriteBlocking(LPUART0, (uint8_t*)data, size / sizeof(uint8_t));
 	}
 	txIndex = 0;
 	rxIndex = 0;
@@ -146,15 +146,10 @@ void TX_Message(){
 void Config_Port_Int(void){
 
 	const port_pin_config_t port_int1_config = {
-			/* Internal pull-up/down resistor is disabled */
 		.pullSelect = kPORT_PullDisable,
-		/* Slow slew rate is configured */
 		.slewRate = kPORT_SlowSlewRate,
-		/* Passive filter is disabled */
 		.passiveFilterEnable = kPORT_PassiveFilterDisable,
-		/* Low drive strength is configured */
 		.driveStrength = kPORT_LowDriveStrength,
-		/* Pin is configured as PTC3 */
 		.mux = kPORT_MuxAsGpio,
 	};
 	const gpio_pin_config_t gpio_int1_config = {

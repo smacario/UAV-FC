@@ -13,6 +13,8 @@
 
 #define LPUART_CLK_FREQ CLOCK_GetFreq(BOARD_DEBUG_UART_CLKSRC)
 
+#define KNOTS_TO_KMS_CONVERTION	1.851999;
+
 #define RING_BUFFER_SIZE 128
 #define LAST_INDEX (rxIndex - 1) % RING_BUFFER_SIZE
 
@@ -20,21 +22,25 @@
 typedef union{
 	struct {
 
-		//($)(GPRMC)(,)(182129.00)(,)(A)(,)(3320.15690,S)(,)(06013.75117,W)(,)(0.195)(,,)(081120),,,A*71
+		//($)(GPRMC)(,)(182129.00)(,)(A)(,)(3320.15690)(,)(S)(,)(06013.75117)(,)(W)(,)(0.195)(,)(,)(081120),,,A*71
 
 		char S_Start;
 		char SentenceName[5];
-		unsigned :8;
+		char :1;
 		char Time[9];
-		unsigned :1;
+		char :1;
 		char Status;
-		unsigned :1;
-		char Latitude[12];
-		unsigned :1;
-		char Longitude[13];
-		unsigned :1;
+		char :1;
+		char Latitude[10];
+		char :1;
+		char Latitude_Orientation;
+		char :1;
+		char Longitude[11];
+		char :1;
+		char Longitude_Orientation;
+		char :1;
 		char SOG[5];
-		unsigned :2;
+		char :2;
 		char Date[6];
 	};
 
@@ -48,13 +54,17 @@ typedef struct{
 	float Latitude;
 	float Heading;
 	float Speed;
+	float height;
+
+	bool DataValid;
+
 
 }GPS_Data;
 
 
 
 void Tx_GPS(GPRCM_data GPS);
-void _GPS();
+void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data);
 
 
 
