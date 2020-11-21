@@ -34,8 +34,8 @@ typedef struct{
 
 
 void Config_Port_Int(void);
-void compass(void);
-void TX_Data(uint8_t data[], uint16_t size);
+void Compass(void);
+void TX_Data(char data[], uint16_t size);
 void TX_Message();
 
 
