@@ -3,5 +3,5 @@ fsl_gpio.h:193:20:GPIO_PortClear	16	static
 fsl_gpio.h:204:20:GPIO_PortToggle	16	static
 fsl_gpio.h:223:24:GPIO_PinRead	16	static
 init_board.c:33:6:Board_Init	8	static
-init_board.c:42:6:board_setLed	16	static
-init_board.c:65:6:board_getSw	16	static
+init_board.c:43:6:board_setLed	16	static
+init_board.c:66:6:board_getSw	16	static

@@ -4,9 +4,9 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/BMI160.c \
 ../source/GPS.c \
 ../source/I2C.c \
-../source/MMA8451.c \
 ../source/QMC5883L.c \
 ../source/UAV_NAVC_pruebas.c \
 ../source/init_board.c \
@@ -14,9 +14,9 @@ C_SRCS += \
 ../source/semihost_hardfault.c 
 
 OBJS += \
+./source/BMI160.o \
 ./source/GPS.o \
 ./source/I2C.o \
-./source/MMA8451.o \
 ./source/QMC5883L.o \
 ./source/UAV_NAVC_pruebas.o \
 ./source/init_board.o \
@@ -24,9 +24,9 @@ OBJS += \
 ./source/semihost_hardfault.o 
 
 C_DEPS += \
+./source/BMI160.d \
 ./source/GPS.d \
 ./source/I2C.d \
-./source/MMA8451.d \
 ./source/QMC5883L.d \
 ./source/UAV_NAVC_pruebas.d \
 ./source/init_board.d \

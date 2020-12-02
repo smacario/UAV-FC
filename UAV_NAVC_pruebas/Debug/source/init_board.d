@@ -6,9 +6,8 @@ source/init_board.o source/init_board.d: ../source/init_board.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_compiler.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_gcc.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/system_MKL43Z4.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/BMI160.h \
  ../source/I2C.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_port.h \
@@ -40,11 +39,9 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\CMSIS/cmsis_gcc.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/system_MKL43Z4.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h:
-
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h:
-
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h:
+
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/BMI160.h:
 
 ../source/I2C.h:
 
