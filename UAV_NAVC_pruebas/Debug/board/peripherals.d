@@ -12,9 +12,9 @@ board/peripherals.o board/peripherals.d: ../board/peripherals.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h
 
 ../board/peripherals.h:
 
@@ -42,8 +42,8 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h:

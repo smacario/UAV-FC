@@ -30,6 +30,11 @@ typedef struct{
 	int16_t X;
 	int16_t Y;
 	int16_t Z;
+
+	int16_t X_gyr;
+	int16_t Y_gyr;
+	int16_t Z_gyr;
+
 }Imu;
 
 

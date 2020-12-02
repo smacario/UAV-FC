@@ -130,11 +130,13 @@ void QMC5883L_calibration(void){
 
 void QMC5883L_init(void){
 
+	// Soft reset
+	QMC5883L_write_reg(MAG_CTRL2_REG_ADDRESS, 0x81);
 
 	QMC5883L_write_reg(SET_RESET_REG_ADDRESS, 0x01);
-	QMC5883L_write_reg(MAG_CTRL1_REG_ADDRESS, 0x1D);
+	QMC5883L_write_reg(MAG_CTRL1_REG_ADDRESS, 0xD9);
 
-	QMC5883L_read_reg(MAG_STATUS_FLAG_ADDRESS);			// Leo flag de status
+
 	//QMC5883L_calibration();								// Rutina de calibracion
 
 }

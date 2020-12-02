@@ -34,11 +34,9 @@ void Tx_GPS(GPRCM_data GPS){
 void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 
 	if(End_Of_Message){
-		End_Of_Message = false;
-
 
 		// Verifico que los datos GPRCM sean validos, si lo son, calculo datos.
-		if(GPRCM.Status == 'A' && strcmp("GPRCM",GPRCM.SentenceName) == 0){
+		if(GPRCM.Status == 'A' && GPRCM.SentenceName[2] == 'R' && GPRCM.SentenceName[3] == 'M' && GPRCM.SentenceName[4] == 'C'){
 
 			if(!gps_data->DataValid) gps_data->DataValid = true;
 
@@ -52,14 +50,21 @@ void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 
 			DD = (int)(lat_data/100);
 			MM = lat_data - (DD * 100);
-			if(GPRCM.Latitude_Orientation == 'S') DD = DD*(-1);
-			gps_data->Latitude = DD + MM/60;
+			if(GPRCM.Latitude_Orientation == 'S') {
+				DD = DD*(-1);
+				gps_data->Latitude = DD - MM/60;
+			}
+			else gps_data->Latitude = DD + MM/60;
+
 
 
 			DD = (int)(lon_data/100);
 			MM = lon_data - (DD * 100);
-			if(GPRCM.Longitude_Orientation == 'W') DD = DD*(-1);
-			gps_data->Longitude = DD + MM/60;
+			if(GPRCM.Longitude_Orientation == 'W'){
+				DD = DD*(-1);
+				gps_data->Longitude = DD - MM/60;
+			}
+			else gps_data->Longitude = DD + MM/60;
 
 			// Leo dato de velocidad y lo paso a GPS
 			gps_data->Speed = strtod(GPRCM.SOG, NULL) * KNOTS_TO_KMS_CONVERTION;
@@ -70,6 +75,8 @@ void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 		else{
 			if(gps_data->DataValid) gps_data->DataValid = false;
 		}
+
+		End_Of_Message = false;
 	}
 }
 
@@ -86,7 +93,7 @@ void UART2_FLEXIO_IRQHandler(void)
 		uart2_rxIndex++;
 
         /* Detecto final de trama <LF> */
-        if(data == 0x0A){
+        if(data == 0x0A && !End_Of_Message){
 
 			End_Of_Message = true;
 			uart2_rxIndex = 0;

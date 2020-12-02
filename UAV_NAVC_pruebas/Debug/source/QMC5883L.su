@@ -2,4 +2,4 @@ QMC5883L.c:22:9:QMC5883L_read_reg	56	static
 QMC5883L.c:42:6:QMC5883L_write_reg	48	static
 QMC5883L.c:61:6:QMC5883L_calibration	48	static
 QMC5883L.c:131:6:QMC5883L_init	8	static
-QMC5883L.c:143:6:SysTick_Handler	8	static
+QMC5883L.c:145:6:SysTick_Handler	8	static

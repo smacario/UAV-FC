@@ -1,6 +1,6 @@
 #include <init_board.h>
-#include <MMA8451.h>
 #include <QMC5883L.h>
+#include <BMI160.h>
 
 #include "I2C.h"
 #include "pin_mux.h"
@@ -33,8 +33,9 @@ static const board_gpioInfo_type board_gpioSw[] =
 void Board_Init(void){
 
 	I2C_init();					// Inicializacion modulo I2C
-	acc_init();					// Inicializacion y calibracion de unidad IMU
-	QMC5883L_init();
+
+	BMI160_init();				// Inicializacion de IMU
+	QMC5883L_init();			// Inicializacion de Magnetometro
 
 }
 

@@ -13,9 +13,9 @@ source/QMC5883L.o source/QMC5883L.d: ../source/QMC5883L.c \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h \
  ../source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\device/MKL43Z4.h \
  ../source/UAV_NAVC_pruebas.h \
@@ -54,11 +54,11 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_common.h
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h:
 
 ../source/init_board.h:
 

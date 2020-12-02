@@ -18,14 +18,13 @@ source/UAV_NAVC_pruebas.o source/UAV_NAVC_pruebas.d: \
  ../source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/peripherals.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/clock_config.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h \
- C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h \
+ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/BMI160.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/GPS.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\utilities/fsl_debug_console.h \
  C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\component\serial_manager/serial_manager.h \
@@ -70,21 +69,19 @@ C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/peripherals.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_i2c.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_clock.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_lpuart.h:
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\drivers/fsl_uart.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/pin_mux.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\board/clock_config.h:
 
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/MMA8451.h:
-
-C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/init_board.h:
-
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/QMC5883L.h:
+
+C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/BMI160.h:
 
 C:\Users\Santiago\Desktop\Facultad\Kinetis\UAV_NAVC_pruebas\source/GPS.h:
 
