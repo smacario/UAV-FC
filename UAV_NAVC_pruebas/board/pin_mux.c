@@ -109,6 +109,8 @@ BOARD_InitPins:
   - {pin_num: '45', peripheral: I2C1, signal: SDA, pin_signal: LCD_P22/ADC0_SE11/PTC2/I2C1_SDA/TPM0_CH1/I2S0_TX_FS}
   - {pin_num: '61', peripheral: UART2, signal: RX, pin_signal: LCD_P44/PTD4/LLWU_P14/SPI1_SS/UART2_RX/TPM0_CH4/FXIO0_D4, identifier: ''}
   - {pin_num: '62', peripheral: UART2, signal: TX, pin_signal: LCD_P45/ADC0_SE6b/PTD5/SPI1_SCK/UART2_TX/TPM0_CH5/FXIO0_D5, identifier: ''}
+  - {pin_num: '28', peripheral: GPIOA, signal: 'GPIO, 12', pin_signal: PTA12/TPM1_CH0/I2S0_TXD0}
+  - {pin_num: '27', peripheral: GPIOA, signal: 'GPIO, 5', pin_signal: PTA5/USB_CLKIN/TPM0_CH2/I2S0_TX_BCLK, identifier: ''}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -121,10 +123,18 @@ BOARD_InitPins:
  * END ****************************************************************************************************************/
 void BOARD_InitPins(void)
 {
+    /* Port A Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortA);
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
     /* Port D Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortD);
+
+    /* PORTA12 (pin 28) is configured as PTA12 */
+    PORT_SetPinMux(PORTA, 12U, kPORT_MuxAsGpio);
+
+    /* PORTA5 (pin 27) is configured as PTA5 */
+    PORT_SetPinMux(PORTA, 5U, kPORT_MuxAsGpio);
 
     /* PORTC1 (pin 44) is configured as I2C1_SCL */
     PORT_SetPinMux(BOARD_I2S0_TXD0_PORT, BOARD_I2S0_TXD0_PIN, kPORT_MuxAlt2);

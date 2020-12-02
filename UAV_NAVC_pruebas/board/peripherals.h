@@ -11,9 +11,9 @@
  **********************************************************************************************************************/
 #include "fsl_common.h"
 #include "fsl_i2c.h"
-#include "fsl_uart.h"
-#include "fsl_clock.h"
 #include "fsl_lpuart.h"
+#include "fsl_clock.h"
+#include "fsl_uart.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -31,20 +31,20 @@ extern "C" {
 /* Definition of the clock source frequency */
 #define I2C1_CLK_FREQ CLOCK_GetFreq(I2C1_CLOCK_SOURCE)
 /* Definition of peripheral ID */
-#define UART2_PERIPHERAL UART2
-/* Definition of the clock source frequency */
-#define UART2_CLOCK_SOURCE CLOCK_GetFreq(UART2_CLK_SRC)
-/* Definition of peripheral ID */
 #define LPUART0_PERIPHERAL LPUART0
 /* Definition of the clock source frequency */
 #define LPUART0_CLOCK_SOURCE 48000000UL
+/* Definition of peripheral ID */
+#define UART2_PERIPHERAL UART2
+/* Definition of the clock source frequency */
+#define UART2_CLOCK_SOURCE CLOCK_GetFreq(UART2_CLK_SRC)
 
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
 extern const i2c_master_config_t I2C1_config;
-extern const uart_config_t UART2_config;
 extern const lpuart_config_t LPUART0_config;
+extern const uart_config_t UART2_config;
 
 /***********************************************************************************************************************
  * Initialization functions
