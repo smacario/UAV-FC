@@ -1,5 +1,4 @@
 #include <board.h>
-#include <MMA8451.h>
 
 #include "fsl_port.h"
 #include "fsl_i2c.h"
