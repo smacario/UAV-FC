@@ -54,10 +54,9 @@ typedef struct{
 	float Latitude;
 	float Heading;
 	float Speed;
-	float height;
+	float Height;
 
 	bool DataValid;
-
 
 }GPS_Data;
 

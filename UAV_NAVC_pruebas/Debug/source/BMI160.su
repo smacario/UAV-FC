@@ -1,5 +1,5 @@
 BMI160.c:23:9:BMI160_read_reg	56	static
 BMI160.c:44:6:BMI160_write_reg	48	static
 BMI160.c:62:6:BMI160_check_id	24	static
-BMI160.c:68:6:delay	16	static
-BMI160.c:75:6:BMI160_init	24	static
+BMI160.c:69:6:delay	16	static
+BMI160.c:76:6:BMI160_init	24	static

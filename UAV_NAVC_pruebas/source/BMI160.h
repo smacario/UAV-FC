@@ -20,11 +20,9 @@
 #define IMU_GYR_INT2_GPIO       GPIOA
 #define IMU_GYR_INT2_PIN        5
 
-
 #define IMU_ID_ADDRESS			0x00
 #define IMU_ERR_REG				0x02
 #define IMU_PMU_STATUS			0x03
-
 
 #define IMU_GYR_X_LO			0x0C
 #define IMU_GYR_X_HI			0x0D
@@ -39,6 +37,9 @@
 #define IMU_ACC_Z_LO			0x16
 #define IMU_ACC_Z_HI			0x17
 
+#define IMU_SENS_TIME_1			0x18
+#define IMU_SENS_TIME_2			0x19
+#define IMU_SENS_TIME_3			0x1A
 
 #define IMU_STATUS				0x1B
 

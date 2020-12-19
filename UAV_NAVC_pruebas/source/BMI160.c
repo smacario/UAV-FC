@@ -65,6 +65,7 @@ void BMI160_check_id(){
 	PRINTF("0x%02x \n", add);
 }
 
+
 void delay(uint32_t cntr){
 	while(cntr>0){
 		cntr--;
