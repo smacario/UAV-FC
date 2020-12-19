@@ -22,6 +22,9 @@
 #include "fsl_uart.h"
 
 
+#define STATIC_OFFSET
+
+
 uint8_t RxBuffer[LPUART_RING_BUFFER_SIZE];					// Buffer de Rx para LPUART0
 volatile uint16_t txIndex;									// Index de Tx
 volatile uint16_t rxIndex; 									// Index de Rx
@@ -35,10 +38,11 @@ int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;			// Offset automatico magneto
 int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;			// Offset automatico acelerometro
 
 static float Pitch, Roll, Yaw;								// Angulos con respecto a los ejes X, Y, Z
+static float Gyr_Pitch,  Gyr_Roll,  Gyr_Yaw;				// Angulos con respecto a los ejes X, Y, Z condatos de giroscopio
+static float CF_Pitch, CF_Roll, CF_Yaw;						// Angulos calculados por el filtro complementario
 
 Mag mag;													// Datos del magnetometro
 Imu imu;													// Datos del acelerometro
-
 GPS_Data GPS;												// Datos del GPS
 
 
@@ -57,23 +61,25 @@ int main(void) {
 
     while(1){
 
-
-/*
-		// Compensacion de datos por calibracion automatica
+#ifdef STATIC_OFFSET
     	mag.X = mag_readX - X_Mag_Offset;
     	mag.Y = mag_readY - Y_Mag_Offset;
     	mag.Z = mag_readZ - Z_Mag_Offset;
-*/
+#else
+		mag.X = mag_readX - X_MAG_OFFSET_STATIC;
+		mag.Y = mag_readY - Y_MAG_OFFSET_STATIC;
+		mag.Z = mag_readZ - Z_MAG_OFFSET_STATIC;
+#endif
+
     	imu.X = acc_readX - X_Acc_Offset;
     	imu.Y = acc_readY - Y_Acc_Offset;
     	imu.Z = acc_readZ - Z_Acc_Offset;
 
-    	// Compensacion de datos estaticos
-    	mag.X = mag_readX - X_MAG_OFFSET_STATIC;
-		mag.Y = mag_readY - Y_MAG_OFFSET_STATIC;
-		mag.Z = mag_readZ - Z_MAG_OFFSET_STATIC;
 
     	Compass();
+    	Gyr_Compass();
+    	Complementary_Filter();
+
     	//TX_Message();
     	GPS_NMEA_Data_Unpacker(&GPS);
 
@@ -81,6 +87,7 @@ int main(void) {
 
     return 0 ;
 }
+
 
 /*  Funcion de brujula  */
 void Compass(void){
@@ -114,6 +121,32 @@ void Compass(void){
 
 }
 
+
+/*  Funcion que calcula los angulos de rotacion con datos del giroscopio  */
+void Gyr_Compass(void){
+	static uint32_t count = 0;
+	static uint32_t prev_count = 0;
+
+	count = (uint32_t)BMI160_read_reg(IMU_SENS_TIME_3) << 16;
+	count |= (uint32_t)BMI160_read_reg(IMU_SENS_TIME_2) << 8;
+	count |= (uint32_t)BMI160_read_reg(IMU_SENS_TIME_1);
+
+	count = count - prev_count;
+
+	Gyr_Roll  = imu.X_gyr * (float)count * _SENS_TIME_INC;
+	Gyr_Pitch = imu.Y_gyr * (float)count * _SENS_TIME_INC;
+	Gyr_Yaw   = imu.Z_gyr * (float)count * _SENS_TIME_INC;
+
+	prev_count = count;
+}
+
+
+/* Calculo del filtro complementario */
+void Complementary_Filter(){
+	CF_Yaw = 0.98f * (CF_Yaw + Gyr_Yaw) + 0.02f * Yaw;
+}
+
+
 /*  Funcion que transmite datos via UART  */
 void TX_Data(char data[], uint16_t size){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
@@ -124,9 +157,8 @@ void TX_Data(char data[], uint16_t size){
 }
 
 
-/*  Funcion que transmite los datos de la NAVC por UART  */
+/*  Funcion que transmite los datos de la NAVC  */
 void TX_Message(){
-
 	char buffer[16];
 
 	sprintf(buffer, "%3.2f %3.2f %3.2f", Pitch, Roll, Yaw);
@@ -136,6 +168,7 @@ void TX_Message(){
 }
 
 
+/* Configuracion de Interrupciones */
 void Config_Port_Int(void){
 
 	const port_pin_config_t port_int1_config = {
@@ -155,7 +188,6 @@ void Config_Port_Int(void){
 
 
 	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
-
 	GPIO_PinInit(MAG_INT1_GPIO, MAG_INT1_PIN, &gpio_int1_config);
 
 	PORT_SetPinInterruptConfig(MAG_INT1_PORT, MAG_INT1_PIN, kPORT_InterruptRisingEdge);
@@ -186,7 +218,6 @@ void PORTC_PORTD_IRQHandler(void)
 
     // Leo flag de interrupcion
     uint32_t PORTD_int = PORT_GetPinsInterruptFlags(PORTD);
-    uint32_t PORTC_int = PORT_GetPinsInterruptFlags(PORTC);
 
     if(PORTD_int && (1 << 3)){
 
@@ -207,6 +238,7 @@ void PORTC_PORTD_IRQHandler(void)
     }
 }
 
+
 /* Handler de la interrupcion de perifericos en PORTA, Acc y Gyr  */
 void PORTA_IRQHandler(void){
 
@@ -215,7 +247,7 @@ void PORTA_IRQHandler(void){
 
     if(PORTA_int && (1 << IMU_ACC_INT1_PIN)){
 
-    	// Leo aceleracion
+    	// Leo acelerometro
     	read   = (int16_t)BMI160_read_reg(IMU_ACC_X_HI)<<8;
 		read  |= BMI160_read_reg(IMU_ACC_X_LO);
 		acc_readX = read >> 2;
