@@ -1,9 +1,5 @@
-/*
- * GPS.c
- *
- *  Created on: 9 Nov 2020
- *      Author: Santiago
- */
+
+/* GPS.c */
 
 #include <stdio.h>
 #include "board.h"
@@ -18,10 +14,8 @@ uint8_t UART2_RingBuffer[RING_BUFFER_SIZE];
 volatile uint16_t uart2_txIndex;
 volatile uint16_t uart2_rxIndex;
 
-GPRCM_data GPRCM;							// Datos de la trama GPRCM.
-
-
-bool End_Of_Message = false;				// Flag de deteccion de finde mensaje
+GPRCM_data GPRCM;								// Datos de la trama GPRCM.
+bool End_Of_Message = false;					// Flag de deteccion de finde mensaje
 
 
 void Tx_GPS(GPRCM_data GPS){
