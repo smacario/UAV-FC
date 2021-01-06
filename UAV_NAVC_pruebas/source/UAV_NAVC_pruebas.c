@@ -76,11 +76,11 @@ int main(void) {
     	imu.Z = acc_readZ - Z_Acc_Offset;
 
 
-    	Compass();
-    	Gyr_Compass();
-    	Complementary_Filter();
+    	//Compass();
+    	//Gyr_Compass();
+    	//Complementary_Filter();
 
-    	//TX_Message();
+    	TX_Message_FC();
     	GPS_NMEA_Data_Unpacker(&GPS);
 
     }
@@ -147,7 +147,7 @@ void Complementary_Filter(){
 }
 
 
-/*  Funcion que transmite datos via UART  */
+/*  Funcion que transmite datos via UART2  */
 void TX_Data(char data[], uint16_t size){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
 		LPUART_WriteBlocking(LPUART0, (uint8_t*)data, size / sizeof(uint8_t));
@@ -157,13 +157,39 @@ void TX_Data(char data[], uint16_t size){
 }
 
 
-/*  Funcion que transmite los datos de la NAVC  */
+/*  Funcion que transmite los datos de la NAVC a la PC */
 void TX_Message(){
 	char buffer[16];
 
 	sprintf(buffer, "%3.2f %3.2f %3.2f", Pitch, Roll, Yaw);
 	//PRINTF("%s \n", buffer);
 	TX_Data(buffer, sizeof(buffer));
+
+}
+
+
+/* Funcion que transmite datos via LPUART1 */
+void TX_Data_FC(char data[], uint16_t size){
+	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART1)){
+		LPUART_WriteBlocking(LPUART1, (uint8_t*)data, size / sizeof(uint8_t));
+	}
+	txIndex = 0;
+	rxIndex = 0;
+}
+
+
+/* Funcion que transmite datos a la FC */
+void TX_Message_FC(){
+
+	char buffer[16];
+
+	GPIO_PortClear(INT_GPIO, INT_PIN);
+
+	sprintf(buffer, " abcde 123456 ");
+	//PRINTF("%s \n", buffer);
+	TX_Data_FC(buffer, sizeof(buffer));
+
+	GPIO_PortSet(INT_GPIO, INT_PIN);
 
 }
 
