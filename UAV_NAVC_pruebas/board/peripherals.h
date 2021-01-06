@@ -38,6 +38,10 @@ extern "C" {
 #define UART2_PERIPHERAL UART2
 /* Definition of the clock source frequency */
 #define UART2_CLOCK_SOURCE CLOCK_GetFreq(UART2_CLK_SRC)
+/* Definition of peripheral ID */
+#define LPUART1_PERIPHERAL LPUART1
+/* Definition of the clock source frequency */
+#define LPUART1_CLOCK_SOURCE 48000000UL
 
 /***********************************************************************************************************************
  * Global variables
@@ -45,6 +49,7 @@ extern "C" {
 extern const i2c_master_config_t I2C1_config;
 extern const lpuart_config_t LPUART0_config;
 extern const uart_config_t UART2_config;
+extern const lpuart_config_t LPUART1_config;
 
 /***********************************************************************************************************************
  * Initialization functions

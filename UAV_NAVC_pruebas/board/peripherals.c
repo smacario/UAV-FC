@@ -165,6 +165,52 @@ void UART2_init(void) {
 }
 
 /***********************************************************************************************************************
+ * LPUART1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPUART1'
+- type: 'lpuart'
+- mode: 'polling'
+- custom_name_enabled: 'false'
+- type_id: 'lpuart_54a65a580e3462acdbacefd5299e0cac'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPUART1'
+- config_sets:
+  - lpuartConfig_t:
+    - lpuartConfig:
+      - clockSource: 'LpuartClock'
+      - lpuartSrcClkFreq: 'BOARD_BootClockRUN'
+      - baudRate_Bps: '115200'
+      - parityMode: 'kLPUART_ParityDisabled'
+      - dataBitsCount: 'kLPUART_EightDataBits'
+      - isMsb: 'false'
+      - stopBitCount: 'kLPUART_OneStopBit'
+      - rxIdleType: 'kLPUART_IdleTypeStartBit'
+      - rxIdleConfig: 'kLPUART_IdleCharacter1'
+      - enableTx: 'true'
+      - enableRx: 'true'
+    - quick_selection: 'QuickSelection1'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lpuart_config_t LPUART1_config = {
+  .baudRate_Bps = 115200,
+  .parityMode = kLPUART_ParityDisabled,
+  .dataBitsCount = kLPUART_EightDataBits,
+  .isMsb = false,
+  .stopBitCount = kLPUART_OneStopBit,
+  .rxIdleType = kLPUART_IdleTypeStartBit,
+  .rxIdleConfig = kLPUART_IdleCharacter1,
+  .enableTx = true,
+  .enableRx = true
+};
+
+void LPUART1_init(void) {
+  LPUART_Init(LPUART1_PERIPHERAL, &LPUART1_config, LPUART1_CLOCK_SOURCE);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -173,6 +219,7 @@ void BOARD_InitPeripherals(void)
   I2C1_init();
   LPUART0_init();
   UART2_init();
+  LPUART1_init();
 }
 
 /***********************************************************************************************************************
