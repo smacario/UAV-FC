@@ -2,6 +2,8 @@ core_cm0plus.h:741:22:__NVIC_EnableIRQ	16	static
 core_cm0plus.h:850:22:__NVIC_SetPriority	24	static
 core_cm0plus.h:1056:26:SysTick_Config	16	static
 fsl_common.h:484:28:EnableIRQ	16	static
+fsl_gpio.h:182:20:GPIO_PortSet	16	static
+fsl_gpio.h:193:20:GPIO_PortClear	16	static
 fsl_lpuart.h:606:23:LPUART_ReadByte	16	static
 fsl_port.h:243:20:PORT_SetPinConfig	32	static
 fsl_port.h:416:20:PORT_SetPinInterruptConfig	24	static
@@ -13,7 +15,9 @@ UAV_NAVC_pruebas.c:126:6:Gyr_Compass	16	static
 UAV_NAVC_pruebas.c:145:6:Complementary_Filter	16	static
 UAV_NAVC_pruebas.c:151:6:TX_Data	16	static
 UAV_NAVC_pruebas.c:161:6:TX_Message	64	static
-UAV_NAVC_pruebas.c:172:6:Config_Port_Int	16	static
-UAV_NAVC_pruebas.c:214:6:PORTC_PORTD_IRQHandler	16	static
-UAV_NAVC_pruebas.c:243:6:PORTA_IRQHandler	16	static
-UAV_NAVC_pruebas.c:296:6:LPUART0_IRQHandler	24	static
+UAV_NAVC_pruebas.c:172:6:TX_Data_FC	16	static
+UAV_NAVC_pruebas.c:182:6:TX_Message_FC	24	static
+UAV_NAVC_pruebas.c:198:6:Config_Port_Int	16	static
+UAV_NAVC_pruebas.c:240:6:PORTC_PORTD_IRQHandler	16	static
+UAV_NAVC_pruebas.c:269:6:PORTA_IRQHandler	16	static
+UAV_NAVC_pruebas.c:322:6:LPUART0_IRQHandler	24	static
