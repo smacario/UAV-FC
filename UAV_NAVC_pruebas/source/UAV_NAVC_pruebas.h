@@ -21,6 +21,9 @@
 #define LPUART_RING_BUFFER_SIZE 	128
 #define LAST_INDEX (rxIndex - 1) 	% RING_BUFFER_SIZE
 
+#define INT_PIN						2
+#define INT_GPIO					GPIOB
+
 
 typedef struct{
 	int16_t X;
@@ -45,6 +48,8 @@ void Config_Port_Int(void);
 void Compass(void);
 void TX_Data(char data[], uint16_t size);
 void TX_Message();
+void TX_Data_FC(char data[], uint16_t size);
+void TX_Message_FC();
 void Gyr_Compass(void);
 void Complementary_Filter();
 

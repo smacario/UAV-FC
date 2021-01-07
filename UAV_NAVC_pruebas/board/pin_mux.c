@@ -45,7 +45,7 @@ pin_labels:
 - {pin_num: '9', pin_signal: LCD_P59/ADC0_DP0/ADC0_SE0/PTE20/TPM1_CH0/LPUART0_TX/FXIO0_D4, label: 'J4[1]/DIFF_ADC0_DP/LCD_P59', identifier: LCD_P59}
 - {pin_num: '35', pin_signal: LCD_P0/ADC0_SE8/PTB0/LLWU_P5/I2C0_SCL/TPM1_CH0, label: 'J4[2]/A0/LCD_P0'}
 - {pin_num: '36', pin_signal: LCD_P1/ADC0_SE9/PTB1/I2C0_SDA/TPM1_CH1, label: 'J4[4]/A1/LCD_P1'}
-- {pin_num: '37', pin_signal: LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0, label: 'J4[6]/A2/LCD_P2'}
+- {pin_num: '37', pin_signal: LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0, label: 'J4[6]/A2/LCD_P2', identifier: INT;INT_PIN}
 - {pin_num: '38', pin_signal: LCD_P3/ADC0_SE13/PTB3/I2C0_SDA/TPM2_CH1, label: 'J4[8]/A3/LCD_P3'}
 - {pin_num: '45', pin_signal: LCD_P22/ADC0_SE11/PTC2/I2C1_SDA/TPM0_CH1/I2S0_TX_FS, label: 'J4[10]/A4/LCD_P22/I2S_TXD0', identifier: I2S0_TX_FS}
 - {pin_num: '44', pin_signal: LCD_P21/ADC0_SE15/PTC1/LLWU_P6/RTC_CLKIN/I2C1_SCL/TPM0_CH0/I2S0_TXD0, label: 'J4[12]/A5/LCD_P21/I2S_TXD0', identifier: I2S0_TXD0}
@@ -111,6 +111,10 @@ BOARD_InitPins:
   - {pin_num: '62', peripheral: UART2, signal: TX, pin_signal: LCD_P45/ADC0_SE6b/PTD5/SPI1_SCK/UART2_TX/TPM0_CH5/FXIO0_D5, identifier: ''}
   - {pin_num: '28', peripheral: GPIOA, signal: 'GPIO, 12', pin_signal: PTA12/TPM1_CH0/I2S0_TXD0}
   - {pin_num: '27', peripheral: GPIOA, signal: 'GPIO, 5', pin_signal: PTA5/USB_CLKIN/TPM0_CH2/I2S0_TX_BCLK, identifier: ''}
+  - {pin_num: '1', peripheral: LPUART1, signal: TX, pin_signal: LCD_P48/PTE0/CLKOUT32K/SPI1_MISO/LPUART1_TX/RTC_CLKOUT/CMP0_OUT/I2C1_SDA, identifier: ''}
+  - {pin_num: '2', peripheral: LPUART1, signal: RX, pin_signal: LCD_P49/PTE1/SPI1_MOSI/LPUART1_RX/SPI1_MISO/I2C1_SCL}
+  - {pin_num: '37', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0, identifier: INT_PIN, direction: OUTPUT, gpio_init_state: 'true',
+    pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -125,16 +129,37 @@ void BOARD_InitPins(void)
 {
     /* Port A Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Port B Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortB);
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
     /* Port D Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortD);
+    /* Port E Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t INT_PIN_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTB2 (pin 37)  */
+    GPIO_PinInit(BOARD_INT_PIN_GPIO, BOARD_INT_PIN_PIN, &INT_PIN_config);
 
     /* PORTA12 (pin 28) is configured as PTA12 */
     PORT_SetPinMux(PORTA, 12U, kPORT_MuxAsGpio);
 
     /* PORTA5 (pin 27) is configured as PTA5 */
     PORT_SetPinMux(PORTA, 5U, kPORT_MuxAsGpio);
+
+    /* PORTB2 (pin 37) is configured as PTB2 */
+    PORT_SetPinMux(BOARD_INT_PIN_PORT, BOARD_INT_PIN_PIN, kPORT_MuxAsGpio);
+
+    PORTB->PCR[2] = ((PORTB->PCR[2] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
+                     | (uint32_t)(PORT_PCR_PE_MASK));
 
     /* PORTC1 (pin 44) is configured as I2C1_SCL */
     PORT_SetPinMux(BOARD_I2S0_TXD0_PORT, BOARD_I2S0_TXD0_PIN, kPORT_MuxAlt2);
@@ -147,6 +172,22 @@ void BOARD_InitPins(void)
 
     /* PORTD5 (pin 62) is configured as UART2_TX */
     PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt3);
+
+    /* PORTE0 (pin 1) is configured as LPUART1_TX */
+    PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt3);
+
+    /* PORTE1 (pin 2) is configured as LPUART1_RX */
+    PORT_SetPinMux(BOARD_I2C1_SCL_PORT, BOARD_I2C1_SCL_PIN, kPORT_MuxAlt3);
+
+    SIM->SOPT5 = ((SIM->SOPT5 &
+                   /* Mask bits to zero which are setting */
+                   (~(SIM_SOPT5_LPUART1TXSRC_MASK | SIM_SOPT5_LPUART1RXSRC_MASK)))
+
+                  /* LPUART1 Transmit Data Source Select: LPUART1_TX pin. */
+                  | SIM_SOPT5_LPUART1TXSRC(SOPT5_LPUART1TXSRC_LPUART_TX)
+
+                  /* LPUART1 Receive Data Source Select: LPUART1_RX pin. */
+                  | SIM_SOPT5_LPUART1RXSRC(SOPT5_LPUART1RXSRC_LPUART_RX));
 }
 
 /* clang-format off */

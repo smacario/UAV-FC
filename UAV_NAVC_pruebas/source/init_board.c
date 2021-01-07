@@ -4,6 +4,7 @@
 
 #include "I2C.h"
 #include "pin_mux.h"
+#include "UAV_NAVC_pruebas.h"
 
 #include "fsl_port.h"
 #include "fsl_gpio.h"
@@ -31,6 +32,8 @@ static const board_gpioInfo_type board_gpioSw[] =
 
 
 void Board_Init(void){
+
+	GPIO_PortSet(INT_GPIO, INT_PIN);
 
 	I2C_init();					// Inicializacion modulo I2C
 

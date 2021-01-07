@@ -25,6 +25,9 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
+#define SOPT5_LPUART1RXSRC_LPUART_RX 0x00u /*!<@brief LPUART1 Receive Data Source Select: LPUART1_RX pin */
+#define SOPT5_LPUART1TXSRC_LPUART_TX 0x00u /*!<@brief LPUART1 Transmit Data Source Select: LPUART1_TX pin */
+
 /*! @name PORTC1 (number 44), J4[12]/A5/LCD_P21/I2S_TXD0
   @{ */
 #define BOARD_I2S0_TXD0_PORT PORTC /*!<@brief PORT device name: PORTC */
@@ -36,6 +39,20 @@ void BOARD_InitBootPins(void);
 #define BOARD_I2S0_TX_FS_PORT PORTC /*!<@brief PORT device name: PORTC */
 #define BOARD_I2S0_TX_FS_PIN 2U     /*!<@brief PORTC pin index: 2 */
                                     /* @} */
+
+/*! @name PORTE1 (number 2), J2[12]/D15/I2C1_SCL/LCD_P49
+  @{ */
+#define BOARD_I2C1_SCL_PORT PORTE /*!<@brief PORT device name: PORTE */
+#define BOARD_I2C1_SCL_PIN 1U     /*!<@brief PORTE pin index: 1 */
+                                  /* @} */
+
+/*! @name PORTB2 (number 37), J4[6]/A2/LCD_P2
+  @{ */
+#define BOARD_INT_PIN_FGPIO FGPIOB /*!<@brief FGPIO device name: FGPIOB */
+#define BOARD_INT_PIN_GPIO GPIOB /*!<@brief GPIO device name: GPIOB */
+#define BOARD_INT_PIN_PORT PORTB /*!<@brief PORT device name: PORTB */
+#define BOARD_INT_PIN_PIN 2U     /*!<@brief PORTB pin index: 2 */
+                                 /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
