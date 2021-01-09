@@ -24,6 +24,8 @@
 #define INT_PIN						2
 #define INT_GPIO					GPIOB
 
+#define FC_INT_PERIOD				(uint16_t)250
+
 
 typedef struct{
 	int16_t X;

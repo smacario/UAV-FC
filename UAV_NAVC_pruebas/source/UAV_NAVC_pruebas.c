@@ -29,6 +29,8 @@ uint8_t RxBuffer[LPUART_RING_BUFFER_SIZE];					// Buffer de Rx para LPUART0
 volatile uint16_t txIndex;									// Index de Tx
 volatile uint16_t rxIndex; 									// Index de Rx
 uint8_t NAVC_DATA_BUFFER[12];								// Buffer de datos de la NAVC
+bool FCIntReady = false;									// Flag para activar la interrupcion de datos a la FC
+static uint16_t FCint_milisec;								// Contador de interrupcion en milisegundos
 
 static int16_t acc_readX, acc_readY, acc_readZ;				// Lectura de acelerometro
 static int32_t mag_readX, mag_readY, mag_readZ;				// Lectura de magnetometro
@@ -76,10 +78,9 @@ int main(void) {
     	imu.Z = acc_readZ - Z_Acc_Offset;
 
 
-    	//Compass();
+    	Compass();
     	//Gyr_Compass();
     	//Complementary_Filter();
-
     	TX_Message_FC();
     	GPS_NMEA_Data_Unpacker(&GPS);
 
@@ -178,18 +179,23 @@ void TX_Data_FC(char data[], uint16_t size){
 }
 
 
-/* Funcion que transmite datos a la FC */
+/* Funcion que transmite datos a la FC cada cierto periodo determinado por FC_INT_PERIOD */
 void TX_Message_FC(){
 
 	char buffer[16];
 
-	GPIO_PortClear(INT_GPIO, INT_PIN);
+	if(FCIntReady){
+		GPIO_PortClear(INT_GPIO, 1<<INT_PIN);
+		for(uint8_t i=0 ; i<100 ; i++) __asm("NOP");
+		GPIO_PortSet(INT_GPIO, 1<<INT_PIN);
 
-	sprintf(buffer, " abcde 123456 ");
-	//PRINTF("%s \n", buffer);
-	TX_Data_FC(buffer, sizeof(buffer));
+		sprintf(buffer, "abcde 123456");
+		//PRINTF("%s \n", buffer);
+		TX_Data_FC(buffer, sizeof(buffer));
 
-	GPIO_PortSet(INT_GPIO, INT_PIN);
+		FCIntReady = false;
+		FCint_milisec = 0;
+	}
 
 }
 
@@ -342,6 +348,14 @@ void LPUART0_IRQHandler(void)
 }
 
 
+/* Handler de la interrupcion del Systick */
+void SysTick_Handler(void){
+
+	FCint_milisec++;
+
+	if(FCint_milisec == FC_INT_PERIOD) FCIntReady = true;
+
+}
 
 
 
