@@ -55,7 +55,7 @@
                <pin_label pin_num="9" pin_signal="LCD_P59/ADC0_DP0/ADC0_SE0/PTE20/TPM1_CH0/LPUART0_TX/FXIO0_D4" label="J4[1]/DIFF_ADC0_DP/LCD_P59" identifier="LCD_P59"/>
                <pin_label pin_num="35" pin_signal="LCD_P0/ADC0_SE8/PTB0/LLWU_P5/I2C0_SCL/TPM1_CH0" label="J4[2]/A0/LCD_P0"/>
                <pin_label pin_num="36" pin_signal="LCD_P1/ADC0_SE9/PTB1/I2C0_SDA/TPM1_CH1" label="J4[4]/A1/LCD_P1"/>
-               <pin_label pin_num="37" pin_signal="LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0" label="J4[6]/A2/LCD_P2"/>
+               <pin_label pin_num="37" pin_signal="LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0" label="J4[6]/A2/LCD_P2" identifier="INT;INT_PIN"/>
                <pin_label pin_num="38" pin_signal="LCD_P3/ADC0_SE13/PTB3/I2C0_SDA/TPM2_CH1" label="J4[8]/A3/LCD_P3"/>
                <pin_label pin_num="45" pin_signal="LCD_P22/ADC0_SE11/PTC2/I2C1_SDA/TPM0_CH1/I2S0_TX_FS" label="J4[10]/A4/LCD_P22/I2S_TXD0" identifier="I2S0_TX_FS"/>
                <pin_label pin_num="44" pin_signal="LCD_P21/ADC0_SE15/PTC1/LLWU_P6/RTC_CLKIN/I2C1_SCL/TPM0_CH0/I2S0_TXD0" label="J4[12]/A5/LCD_P21/I2S_TXD0" identifier="I2S0_TXD0"/>
@@ -81,7 +81,7 @@
                <pin_label pin_num="8" pin_signal="VREGIN" label="KL43Z_REGIN" identifier="VREGIN"/>
                <pin_label pin_num="15" pin_signal="VREFL" label="GND"/>
                <pin_label pin_num="14" pin_signal="VREFH" label="J19[2]/P3V3_KL43Z"/>
-               <pin_label pin_num="19" pin_signal="PTE31/TPM0_CH4" label="LED2" identifier="LED2"/>
+               <pin_label pin_num="19" pin_signal="PTE31/TPM0_CH4" label="LED2" identifier="LED2;LED_ROJO"/>
                <pin_label pin_num="48" pin_signal="VLL3" label="J12[1]/P3V3_KL43Z"/>
                <pin_label pin_num="49" pin_signal="VLL2/LCD_P4/PTC20" label="TP12/LCD_P4"/>
                <pin_label pin_num="50" pin_signal="VLL1/LCD_P5/PTC21" label="TP10/LCD_P5"/>
@@ -110,12 +110,22 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="LPUART1" description="Peripheral LPUART1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
@@ -138,6 +148,26 @@
                   <pin peripheral="GPIOA" signal="GPIO, 5" pin_num="27" pin_signal="PTA5/USB_CLKIN/TPM0_CH2/I2S0_TX_BCLK">
                      <pin_features>
                         <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="LPUART1" signal="TX" pin_num="1" pin_signal="LCD_P48/PTE0/CLKOUT32K/SPI1_MISO/LPUART1_TX/RTC_CLKOUT/CMP0_OUT/I2C1_SDA">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="LPUART1" signal="RX" pin_num="2" pin_signal="LCD_P49/PTE1/SPI1_MOSI/LPUART1_RX/SPI1_MISO/I2C1_SCL"/>
+                  <pin peripheral="GPIOB" signal="GPIO, 2" pin_num="37" pin_signal="LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0">
+                     <pin_features>
+                        <pin_feature name="identifier" value="INT_PIN"/>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="gpio_init_state" value="true"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOE" signal="GPIO, 31" pin_num="19" pin_signal="PTE31/TPM0_CH4">
+                     <pin_features>
+                        <pin_feature name="identifier" value="LED_ROJO"/>
+                        <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
                   </pin>
                </pins>
@@ -330,6 +360,7 @@
                <pins>
                   <pin peripheral="GPIOE" signal="GPIO, 31" pin_num="19" pin_signal="PTE31/TPM0_CH4">
                      <pin_features>
+                        <pin_feature name="identifier" value="LED2"/>
                         <pin_feature name="direction" value="OUTPUT"/>
                         <pin_feature name="gpio_init_state" value="true"/>
                         <pin_feature name="slew_rate" value="slow"/>
@@ -755,6 +786,21 @@
                         <data type="Boolean">true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="LPUART1CLK" description="LPUART1 clock is inactive. Problem must be resolved in another tool." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPUART1.uart_tx" description="Signal TX of the peripheral LPUART1 is not routed. Problem must be resolved in another tool." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPUART1.uart_rx" description="Signal RX of the peripheral LPUART1 is not routed. Problem must be resolved in another tool." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="ClockOutput" resourceId="Bus_clock" description="Bus clock is inactive. Problem must be resolved in another tool." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="frequency" evaluation="greaterThan">
                         <data type="Frequency" unit="Hz">0</data>
@@ -802,6 +848,23 @@
                         </struct>
                      </config_set>
                   </instance>
+                  <instance name="LPUART1" uuid="f6ee9f8b-1427-47f9-9d92-8d5de8e15563" type="lpuart" type_id="lpuart_54a65a580e3462acdbacefd5299e0cac" mode="polling" peripheral="LPUART1" enabled="true" comment="" custom_name_enabled="false">
+                     <config_set name="lpuartConfig_t" quick_selection="QuickSelection1">
+                        <struct name="lpuartConfig">
+                           <setting name="clockSource" value="LpuartClock"/>
+                           <setting name="lpuartSrcClkFreq" value="BOARD_BootClockRUN"/>
+                           <setting name="baudRate_Bps" value="115200"/>
+                           <setting name="parityMode" value="kLPUART_ParityDisabled"/>
+                           <setting name="dataBitsCount" value="kLPUART_EightDataBits"/>
+                           <setting name="isMsb" value="false"/>
+                           <setting name="stopBitCount" value="kLPUART_OneStopBit"/>
+                           <setting name="rxIdleType" value="kLPUART_IdleTypeStartBit"/>
+                           <setting name="rxIdleConfig" value="kLPUART_IdleCharacter1"/>
+                           <setting name="enableTx" value="true"/>
+                           <setting name="enableRx" value="true"/>
+                        </struct>
+                     </config_set>
+                  </instance>
                   <instance name="UART2" uuid="a41d6063-4fe8-4783-864e-7808f7e04521" type="uart" type_id="uart_88ab1eca0cddb7ee407685775de016d5" mode="polling" peripheral="UART2" enabled="true" comment="" custom_name_enabled="false">
                      <config_set name="uartConfig_t" quick_selection="QuickSelection5">
                         <struct name="uartConfig">
@@ -822,7 +885,7 @@
             <component name="system" uuid="7503c987-76a6-44c5-be90-5dc689cf1cc8" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions"/>
             </component>
-            <component name="msg" uuid="2cf6623a-c08e-4921-bcac-4f33ef27d8e2" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="5ea6ce3f-c294-4f33-8270-cd8b8c3a8b00" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
          </components>

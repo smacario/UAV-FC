@@ -71,7 +71,7 @@ pin_labels:
 - {pin_num: '8', pin_signal: VREGIN, label: KL43Z_REGIN, identifier: VREGIN}
 - {pin_num: '15', pin_signal: VREFL, label: GND}
 - {pin_num: '14', pin_signal: VREFH, label: 'J19[2]/P3V3_KL43Z'}
-- {pin_num: '19', pin_signal: PTE31/TPM0_CH4, label: LED2, identifier: LED2}
+- {pin_num: '19', pin_signal: PTE31/TPM0_CH4, label: LED2, identifier: LED2;LED_ROJO}
 - {pin_num: '48', pin_signal: VLL3, label: 'J12[1]/P3V3_KL43Z'}
 - {pin_num: '49', pin_signal: VLL2/LCD_P4/PTC20, label: TP12/LCD_P4}
 - {pin_num: '50', pin_signal: VLL1/LCD_P5/PTC21, label: TP10/LCD_P5}
@@ -115,6 +115,7 @@ BOARD_InitPins:
   - {pin_num: '2', peripheral: LPUART1, signal: RX, pin_signal: LCD_P49/PTE1/SPI1_MOSI/LPUART1_RX/SPI1_MISO/I2C1_SCL}
   - {pin_num: '37', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: LCD_P2/ADC0_SE12/PTB2/I2C0_SCL/TPM2_CH0, identifier: INT_PIN, direction: OUTPUT, gpio_init_state: 'true',
     pull_enable: enable}
+  - {pin_num: '19', peripheral: GPIOE, signal: 'GPIO, 31', pin_signal: PTE31/TPM0_CH4, identifier: LED_ROJO, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -144,6 +145,13 @@ void BOARD_InitPins(void)
     };
     /* Initialize GPIO functionality on pin PTB2 (pin 37)  */
     GPIO_PinInit(BOARD_INT_PIN_GPIO, BOARD_INT_PIN_PIN, &INT_PIN_config);
+
+    gpio_pin_config_t LED_ROJO_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE31 (pin 19)  */
+    GPIO_PinInit(BOARD_LED_ROJO_GPIO, BOARD_LED_ROJO_PIN, &LED_ROJO_config);
 
     /* PORTA12 (pin 28) is configured as PTA12 */
     PORT_SetPinMux(PORTA, 12U, kPORT_MuxAsGpio);
@@ -178,6 +186,9 @@ void BOARD_InitPins(void)
 
     /* PORTE1 (pin 2) is configured as LPUART1_RX */
     PORT_SetPinMux(BOARD_I2C1_SCL_PORT, BOARD_I2C1_SCL_PIN, kPORT_MuxAlt3);
+
+    /* PORTE31 (pin 19) is configured as PTE31 */
+    PORT_SetPinMux(BOARD_LED_ROJO_PORT, BOARD_LED_ROJO_PIN, kPORT_MuxAsGpio);
 
     SIM->SOPT5 = ((SIM->SOPT5 &
                    /* Mask bits to zero which are setting */
@@ -534,8 +545,8 @@ void BOARD_InitBUTTONSPins(void)
 BOARD_InitLEDsPins:
 - options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '19', peripheral: GPIOE, signal: 'GPIO, 31', pin_signal: PTE31/TPM0_CH4, direction: OUTPUT, gpio_init_state: 'true', slew_rate: slow, pull_select: down,
-    pull_enable: disable}
+  - {pin_num: '19', peripheral: GPIOE, signal: 'GPIO, 31', pin_signal: PTE31/TPM0_CH4, identifier: LED2, direction: OUTPUT, gpio_init_state: 'true', slew_rate: slow,
+    pull_select: down, pull_enable: disable}
   - {pin_num: '62', peripheral: GPIOD, signal: 'GPIO, 5', pin_signal: LCD_P45/ADC0_SE6b/PTD5/SPI1_SCK/UART2_TX/TPM0_CH5/FXIO0_D5, direction: OUTPUT, gpio_init_state: 'true',
     slew_rate: slow, pull_select: down, pull_enable: disable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********

@@ -54,6 +54,14 @@ void BOARD_InitBootPins(void);
 #define BOARD_INT_PIN_PIN 2U     /*!<@brief PORTB pin index: 2 */
                                  /* @} */
 
+/*! @name PORTE31 (number 19), LED2
+  @{ */
+#define BOARD_LED_ROJO_FGPIO FGPIOE /*!<@brief FGPIO device name: FGPIOE */
+#define BOARD_LED_ROJO_GPIO GPIOE /*!<@brief GPIO device name: GPIOE */
+#define BOARD_LED_ROJO_PORT PORTE /*!<@brief PORT device name: PORTE */
+#define BOARD_LED_ROJO_PIN 31U    /*!<@brief PORTE pin index: 31 */
+                                  /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

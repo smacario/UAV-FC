@@ -57,7 +57,7 @@ void QMC5883L_write_reg(uint8_t addr, uint8_t data)
     //PRINTF("Se escribio en 0x%02hhx el valor 0x%02hhx\n",addr,data);
 }
 
-
+/*
 void QMC5883L_calibration(void){
 	// Implementar calibracion de magnetometro
 
@@ -126,7 +126,7 @@ void QMC5883L_calibration(void){
 	PRINTF("Listo! \n");
 
 }
-
+*/
 
 void QMC5883L_init(void){
 
@@ -142,13 +142,4 @@ void QMC5883L_init(void){
 }
 
 
-void SysTick_Handler(void){
 
-	milisec++;
-
-	if(milisec == 100){
-		milisec = 0;
-		DataReady = true;
-	}
-
-}
