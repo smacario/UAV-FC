@@ -2,7 +2,7 @@
  * UAV_NAVC_pruebas.h
  *
  *  Created on: 22 Oct 2020
- *      Author: Santiago
+ *      Author: Santiago Macario
  */
 
 #ifndef UAV_NAVC_PRUEBAS_H_
@@ -24,7 +24,7 @@
 #define INT_PIN						2
 #define INT_GPIO					GPIOB
 
-#define FC_INT_PERIOD				(uint16_t)250
+#define FC_INT_PERIOD				(uint8_t)250
 
 
 typedef struct{

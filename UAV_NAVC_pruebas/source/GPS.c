@@ -1,5 +1,9 @@
-
-/* GPS.c */
+/*
+ * 	GPS.c
+ *
+ *  Created on: 30 Oct 2020
+ *      Author: Santiago Macario
+ */
 
 #include <stdio.h>
 #include "board.h"
@@ -10,21 +14,34 @@
 #include "fsl_debug_console.h"
 #include "GPS.h"
 
-uint8_t UART2_RingBuffer[RING_BUFFER_SIZE];
-volatile uint16_t uart2_txIndex;
-volatile uint16_t uart2_rxIndex;
+uint8_t UART2_RingBuffer[RING_BUFFER_SIZE];		// Buffer de datos recibidos
+volatile uint16_t uart2_txIndex;				// Indice de transmision
+volatile uint16_t uart2_rxIndex;				// Indice de recepcion
 
-GPRCM_data GPRCM;								// Datos de la trama GPRCM.
+GPRCM_data GPRCM;								// Datos de la trama GPRCM
 bool End_Of_Message = false;					// Flag de deteccion de finde mensaje
 
 
+/*!
+ * brief
+ *
+ */
 void Tx_GPS(GPRCM_data GPS){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
 		LPUART_WriteBlocking(LPUART0, GPS.Data, RING_BUFFER_SIZE / sizeof(uint8_t));
 	}
 }
 
-
+/*!
+ * brief 	Se procesa la trama del GPS
+ *
+ * 			Una vez que se reciben los datos del buffer, se verifica que la trama sea la correcta y luego
+ * 			se extraen los datos pertienentes a cada una. En este caso GPRCM incluye Lat, Long, SOG, Fecha,
+ * 			etc. Además se convierten las unidades de formato DDMM.MMMMMM y lo convierto a grados decimales
+ * 			y la velocidad sobre el suelo de nudos a kmh.
+ * 			Por ultimo se verifica la validez de la trama.
+ *
+ */
 void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 
 	if(End_Of_Message){
@@ -50,8 +67,6 @@ void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 			}
 			else gps_data->Latitude = DD + MM/60;
 
-
-
 			DD = (int)(lon_data/100);
 			MM = lon_data - (DD * 100);
 			if(GPRCM.Longitude_Orientation == 'W'){
@@ -60,10 +75,9 @@ void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 			}
 			else gps_data->Longitude = DD + MM/60;
 
+
 			// Leo dato de velocidad y lo paso a GPS
 			gps_data->Speed = strtod(GPRCM.SOG, NULL) * KNOTS_TO_KMS_CONVERTION;
-
-
 
 		}
 		else{
@@ -74,7 +88,13 @@ void GPS_NMEA_Data_Unpacker(GPS_Data *gps_data){
 	}
 }
 
-
+/*!
+ * brief 	Handler de UART2 (GPS)
+ *
+ *			Se reciben los datos en un Ring Buffer, cuando se detecta el caracter de fin de trama (0x0A),
+ * 			los datos del mismo se copian a la estructura de GPRCM, y se limpia el biffer anterior.
+ *
+ */
 void UART2_FLEXIO_IRQHandler(void)
 {
     uint8_t data;
