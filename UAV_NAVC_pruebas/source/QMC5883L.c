@@ -18,6 +18,8 @@ bool DataReady = false;										// Flag utilizada en calibracion de magnetometr
 
 extern int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;	// Offset calculado en autocalibracion
 
+i2c_master_handle_t g_m_handle_qmc5883;
+
 
 uint8_t QMC5883L_read_reg(uint8_t addr)
 {
@@ -33,6 +35,7 @@ uint8_t QMC5883L_read_reg(uint8_t addr)
 	masterXfer.dataSize = 1;
 	masterXfer.flags = kI2C_TransferDefaultFlag;
 
+	//I2C_MasterTransferNonBlocking(I2C1_PERIPHERAL,&g_m_handle_qmc5883, &masterXfer);
 	I2C_MasterTransferBlocking(I2C1_PERIPHERAL, &masterXfer);
 
 	return ret;
@@ -53,6 +56,7 @@ void QMC5883L_write_reg(uint8_t addr, uint8_t data)
 	masterXfer.dataSize = 1;
 	masterXfer.flags = kI2C_TransferDefaultFlag;
 
+	//I2C_MasterTransferNonBlocking(I2C1_PERIPHERAL,&g_m_handle_qmc5883, &masterXfer);
     I2C_MasterTransferBlocking(I2C1_PERIPHERAL, &masterXfer);
     //PRINTF("Se escribio en 0x%02hhx el valor 0x%02hhx\n",addr,data);
 }
