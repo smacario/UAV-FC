@@ -1,5 +1,17 @@
 
-/*  Proyecto UAV-NAVC  */
+/*
+*	Programa de Computadora de NAVegacion (NAV-C) para poryecto UAV
+*	Autor: Santiago Macario.
+*	Sistemas Digitales III - FCEIA - UNR
+*
+*	https://github.com/smacario/UAV-FC.git
+*
+*	Problemas:
+*		10/11/2020 - Interrupcion y flag de DRDY del Q5883L no funciona.
+*		11/01/2021 - Heap overflow en I2C_MasterTransferBlocking. Cuelga el programa. (Implementar NonBlocking)
+*
+*
+*/
 
 #include <stdio.h>
 #include "math.h"
@@ -22,25 +34,25 @@
 #include "fsl_uart.h"
 
 
-#define STATIC_OFFSET
+//#define STATIC_OFFSET
 
 
 uint8_t RxBuffer[LPUART_RING_BUFFER_SIZE];					// Buffer de Rx para LPUART0
-volatile uint16_t txIndex;									// Index de Tx
-volatile uint16_t rxIndex; 									// Index de Rx
-uint8_t NAVC_DATA_BUFFER[12];								// Buffer de datos de la NAVC
-bool FCIntReady = false;									// Flag para activar la interrupcion de datos a la FC
+volatile uint16_t txIndex;									// Index de Tx para LPUART0
+volatile uint16_t rxIndex; 									// Index de Rx para LPUART0
+uint8_t NAVC_DATA_BUFFER[12];								// Buffer de datos de la NAVC para LPUART0
+bool FCIntReady = false;									// Flag para activar la interrupcion de datos a la FC para LPUART0
 static uint16_t FCint_milisec;								// Contador de interrupcion en milisegundos
 
-static int16_t acc_readX, acc_readY, acc_readZ;				// Lectura de acelerometro
-static int32_t mag_readX, mag_readY, mag_readZ;				// Lectura de magnetometro
-static int16_t gyr_readX, gyr_readY, gyr_readZ;				// Lectura de giroscopio
+static int16_t acc_readX, acc_readY, acc_readZ;				// Lectura diracta del acelerometro
+static int32_t mag_readX, mag_readY, mag_readZ;				// Lectura diracta del magnetometro
+static int16_t gyr_readX, gyr_readY, gyr_readZ;				// Lectura diracta del giroscopio
 
 int16_t X_Mag_Offset, Y_Mag_Offset, Z_Mag_Offset;			// Offset automatico magnetometro
 int8_t  X_Acc_Offset, Y_Acc_Offset, Z_Acc_Offset;			// Offset automatico acelerometro
 
 static float Pitch, Roll, Yaw;								// Angulos con respecto a los ejes X, Y, Z
-static float Gyr_Pitch,  Gyr_Roll,  Gyr_Yaw;				// Angulos con respecto a los ejes X, Y, Z condatos de giroscopio
+static float Gyr_Pitch,  Gyr_Roll,  Gyr_Yaw;				// Angulos con respecto a los ejes X, Y, Z de giroscopio
 static float CF_Pitch, CF_Roll, CF_Yaw;						// Angulos calculados por el filtro complementario
 
 Mag mag;													// Datos del magnetometro
@@ -48,14 +60,14 @@ Imu imu;													// Datos del acelerometro
 GPS_Data GPS;												// Datos del GPS
 
 
-/*  Main  */
+
 int main(void) {
 
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
-
     BOARD_InitDebugConsole();
+
     SysTick_Config(SystemCoreClock / 1000U);
 
     Board_Init();
@@ -63,7 +75,7 @@ int main(void) {
 
     while(1){
 
-#ifdef STATIC_OFFSET
+#ifndef STATIC_OFFSET
     	mag.X = mag_readX - X_Mag_Offset;
     	mag.Y = mag_readY - Y_Mag_Offset;
     	mag.Z = mag_readZ - Z_Mag_Offset;
@@ -85,22 +97,28 @@ int main(void) {
     	GPS_NMEA_Data_Unpacker(&GPS);
 
     }
-
     return 0 ;
 }
 
 
-/*  Funcion de brujula  */
+/*!
+ * brief 	Calcula los angulos de giro con respecto a los ejes X, Y, Z.
+ *
+ * 			A partir de los datos del acelerometro se calculan los valores de Pitch y Roll,
+ * 			para calcular el Yaw se usan los datos del magnetometro pero compensando la
+ * 			inclinacion del sensor en todos sus angulos posibles.
+ *
+ */
 void Compass(void){
 
 	float norm;
 
-	/* Calculo de Roll y Pitch */
+	// Calculo de Roll y Pitch
 	Roll  = (float)atan2f(imu.Y, imu.Z) * (180.0f / _PI);
 	Pitch = (float)atan2f(-1 * imu.X, sqrt(imu.Y*imu.Y + imu.Z*imu.Z)) * (180.0f / _PI);
 
 
-	/* Compensacion y calculo de Yaw */
+	// Compensacion y calculo de Yaw
 	norm = sqrt(imu.X*imu.X + imu.Y*imu.Y + imu.Z*imu.Z);
 
 	float A_Pitch = -asin(imu.X / norm);
@@ -123,7 +141,16 @@ void Compass(void){
 }
 
 
-/*  Funcion que calcula los angulos de rotacion con datos del giroscopio  */
+/*!
+ * brief 	Calcula los angulos de giro con respecto a los ejes X, Y, Z.
+ *
+ * 			Con los datos proporcionados por el giroscopio calcula los angulos de giro
+ * 			con respecto a los ejes X, Y, Z.
+ *
+ *
+ * 			Revisar implementacion, produce erroes en bus i2C
+ *
+ */
 void Gyr_Compass(void){
 	static uint32_t count = 0;
 	static uint32_t prev_count = 0;
@@ -148,7 +175,13 @@ void Complementary_Filter(){
 }
 
 
-/*  Funcion que transmite datos via UART2  */
+/*!
+ * brief 	Transmite datos via puerto LPUART0 a PC
+ *
+ * 			param data: Bloque de datos a transmitr.
+ * 			param size: Tamaño del bloque, (generalmente toma el valor sizeof(data))
+ *
+ */
 void TX_Data(char data[], uint16_t size){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)){
 		LPUART_WriteBlocking(LPUART0, (uint8_t*)data, size / sizeof(uint8_t));
@@ -158,7 +191,10 @@ void TX_Data(char data[], uint16_t size){
 }
 
 
-/*  Funcion que transmite los datos de la NAVC a la PC */
+/*!
+ * brief 	Se construye el mensaje de LPUART0 y se envia con TX_Data()
+ *
+ */
 void TX_Message(){
 	char buffer[16];
 
@@ -169,7 +205,13 @@ void TX_Message(){
 }
 
 
-/* Funcion que transmite datos via LPUART1 */
+/*!
+ * brief 	Transmite datos via puerto LPUART1 a FC
+ *
+ * 			param data: Bloque de datos a transmitr.
+ * 			param size: Tamaño del bloque, (generalmente toma el valor sizeof(data))
+ *
+ */
 void TX_Data_FC(char data[], uint16_t size){
 	if(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART1)){
 		LPUART_WriteBlocking(LPUART1, (uint8_t*)data, size / sizeof(uint8_t));
@@ -179,28 +221,53 @@ void TX_Data_FC(char data[], uint16_t size){
 }
 
 
-/* Funcion que transmite datos a la FC cada cierto periodo determinado por FC_INT_PERIOD */
+/*!
+ * brief 	Se construye el mensaje de LPUART1 para FC, y se envia con TX_Data_FC()
+ *
+ * 			Priemro se deshabilitan las interrupciones de LPUART y GPIO para no interrumpir
+ *			la transmision, luego se da una señal de interrupcion para la FC por 25 ciclos
+ * 			de clock, se transmite el mensaje y se vuelven a habilitar las inerrupciones.
+ *
+ */
 void TX_Message_FC(){
 
-	char buffer[16];
+	char mensaje[14] = "$abcde,123456\n";
+	char buffer[sizeof(mensaje)];
+
+	// Deshabilito interrupciones para transmision sin interferencias
+	LPUART_DisableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
+	UART_DisableInterrupts(UART2, kUART_RxDataRegFullInterruptEnable);
+	NVIC_DisableIRQ(PORTC_PORTD_IRQn);
+	NVIC_DisableIRQ(PORTA_IRQn);
 
 	if(FCIntReady){
+		// Pulso de 25 ciclos de reloj
 		GPIO_PortClear(INT_GPIO, 1<<INT_PIN);
-		for(uint8_t i=0 ; i<100 ; i++) __asm("NOP");
+		for(uint8_t i=0 ; i<25 ; i++) __asm("NOP");
 		GPIO_PortSet(INT_GPIO, 1<<INT_PIN);
 
-		sprintf(buffer, "abcde 123456");
-		//PRINTF("%s \n", buffer);
+		// Envio mensaje
+		sprintf(buffer, mensaje);
 		TX_Data_FC(buffer, sizeof(buffer));
 
+		// Reset de contador de periodo
 		FCIntReady = false;
 		FCint_milisec = 0;
 	}
 
+	// Habilito interrupciones externas
+	NVIC_EnableIRQ(PORTC_PORTD_IRQn);
+	NVIC_EnableIRQ(PORTA_IRQn);
+	LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
+	UART_EnableInterrupts(UART2, kUART_RxDataRegFullInterruptEnable);
+
 }
 
 
-/* Configuracion de Interrupciones */
+/*!
+ * brief 	Se configuran las interupciones del sistema
+ *
+ */
 void Config_Port_Int(void){
 
 	const port_pin_config_t port_int1_config = {
@@ -214,9 +281,6 @@ void Config_Port_Int(void){
 		.pinDirection = kGPIO_DigitalInput,
 		.outputLogic = 0U
 	};
-
-
-	/*	Configuracion de interrupciones del sistema	  */
 
 
 	PORT_SetPinConfig(MAG_INT1_PORT, MAG_INT1_PIN, &port_int1_config);
@@ -242,7 +306,15 @@ void Config_Port_Int(void){
 }
 
 
-/*  Handler de la interrupcion de perifericos en PORTC y PORTD, Mag  */
+/*!
+ * brief 	Handler de la interrupcion de perifericos en PORTC y PORTD, Mag
+ *
+ *			Se leen los datos del magnetometro con la interrupcion de PTD3
+ *
+ * 			Problemas:
+ * 				No funciona la interrupcion en el sensor
+ *
+ */
 void PORTC_PORTD_IRQHandler(void)
 {
 
@@ -271,7 +343,14 @@ void PORTC_PORTD_IRQHandler(void)
 }
 
 
-/* Handler de la interrupcion de perifericos en PORTA, Acc y Gyr  */
+/*!
+ * brief 	Handler de la interrupcion de perifericos en PORTA, Acc y Gyr
+ *
+ * 			Ante la llegada de la interrupcion del BMI160, se procede a leer los datos de todos
+ * 			los sensores, Gyr, Acc, y Mag. Este ultimo se asegura una actualizacion de datos mas
+ * 			rapida para asegurar datos buenos. (No puede leerse la flag de DRDY en magnetometro)
+ *
+ */
 void PORTA_IRQHandler(void){
 
 	uint32_t PORTA_int = PORT_GetPinsInterruptFlags(PORTA);
@@ -324,15 +403,18 @@ void PORTA_IRQHandler(void){
 }
 
 
-/* Handler de la interrupcion de LPUART0, conexión con PC  */
+/*!
+ * brief 	Handler de la interrupcion de LPUART0, conexión con PC
+ *
+ */
 void LPUART0_IRQHandler(void)
 {
     uint8_t data;
     uint16_t tmprxIndex = rxIndex;
     uint16_t tmptxIndex = txIndex;
 
-    /* If new data arrived. */
-    if ((kLPUART_RxDataRegFullFlag)&LPUART_GetStatusFlags(LPUART0))
+    // Nuevos datos en buffer
+    if ((kLPUART_RxDataRegFullFlag) & LPUART_GetStatusFlags(LPUART0))
     {
         data = LPUART_ReadByte(LPUART0);
 
@@ -348,12 +430,21 @@ void LPUART0_IRQHandler(void)
 }
 
 
-/* Handler de la interrupcion del Systick */
+/*!
+ * brief 	Handler de la interrupcion del Systick
+ *
+ * 			Se determiana la frecuencia de envio de datos a la FC con FC_INT_PERIOD.
+ * 			Además se hace toggle en el led rojo de la placa para verificar
+ *
+ */
 void SysTick_Handler(void){
 
 	FCint_milisec++;
 
-	if(FCint_milisec == FC_INT_PERIOD) FCIntReady = true;
+	if(FCint_milisec == FC_INT_PERIOD){
+		FCIntReady = true;
+		GPIO_PortToggle(BOARD_LED_ROJO_GPIO, 1<<BOARD_LED_ROJO_PIN);
+	}
 
 }
 
