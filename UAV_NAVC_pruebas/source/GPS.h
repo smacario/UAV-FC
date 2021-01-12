@@ -11,6 +11,7 @@
 #include "MKL43Z4.h"
 #include "fsl_debug_console.h"
 
+
 #define LPUART_CLK_FREQ CLOCK_GetFreq(BOARD_DEBUG_UART_CLKSRC)
 
 #define KNOTS_TO_KMS_CONVERTION	1.851999;
@@ -19,11 +20,15 @@
 #define LAST_INDEX (rxIndex - 1) % RING_BUFFER_SIZE
 
 
+/*!
+ * brief Estructura de datos de GPRCM
+ *
+ * La misma sigue el formato de la trama determinada por la NMEA, un ejemplo de mensaje valido es el siguiente:
+ * 	($)(GPRMC)(,)(182129.00)(,)(A)(,)(3320.15690)(,)(S)(,)(06013.75117)(,)(W)(,)(0.195)(,)(,)(081120),,,A*71
+ *
+ */
 typedef union{
 	struct {
-
-		//($)(GPRMC)(,)(182129.00)(,)(A)(,)(3320.15690)(,)(S)(,)(06013.75117)(,)(W)(,)(0.195)(,)(,)(081120),,,A*71
-
 		char S_Start;
 		char SentenceName[5];
 		char :1;
@@ -43,7 +48,6 @@ typedef union{
 		char :2;
 		char Date[6];
 	};
-
 	uint8_t Data[RING_BUFFER_SIZE];
 
 }GPRCM_data;
