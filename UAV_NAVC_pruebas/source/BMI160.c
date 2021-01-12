@@ -2,7 +2,7 @@
  * BMI160.c
  *
  *  Created on: 28 Nov 2020
- *      Author: Santiago
+ *      Author: Santiago Macario
  */
 
 #include <string.h>
@@ -19,7 +19,13 @@
 #include "UAV_NAVC_pruebas.h"
 #include "fsl_debug_console.h"
 
+i2c_master_handle_t g_m_handle;
 
+
+/*!
+ * brief 	Reads BMI160 register
+ *
+ */
 uint8_t BMI160_read_reg(uint8_t addr)
 {
 	i2c_master_transfer_t masterXfer;
@@ -35,12 +41,16 @@ uint8_t BMI160_read_reg(uint8_t addr)
 	masterXfer.flags = kI2C_TransferDefaultFlag;
 
 	I2C_MasterTransferBlocking(I2C1_PERIPHERAL, &masterXfer);
+	//I2C_MasterTransferNonBlocking(I2C1_PERIPHERAL,&g_m_handle, &masterXfer);
 
 	return ret;
 }
 
 
-
+/*!
+ * brief 	Writes to BMI160 register
+ *
+ */
 void BMI160_write_reg(uint8_t addr, uint8_t data)
 {
 	i2c_master_transfer_t masterXfer;
@@ -56,9 +66,15 @@ void BMI160_write_reg(uint8_t addr, uint8_t data)
 	masterXfer.flags = kI2C_TransferDefaultFlag;
 
     I2C_MasterTransferBlocking(I2C1_PERIPHERAL, &masterXfer);
+	//I2C_MasterTransferNonBlocking(I2C1_PERIPHERAL,&g_m_handle, &masterXfer);
     //PRINTF("Se escribio en 0x%02x el valor 0x%02x\n",addr,data);
 }
 
+
+/*!
+ * brief 	Checks BMI160 chip id
+ *
+ */
 void BMI160_check_id(){
 	uint8_t add;
 	add = BMI160_read_reg(IMU_ID_ADDRESS);
@@ -66,6 +82,10 @@ void BMI160_check_id(){
 }
 
 
+/*!
+ * brief 	Simple delay funcion to hold I2C bus
+ *
+ */
 void delay(uint32_t cntr){
 	while(cntr>0){
 		cntr--;
@@ -73,6 +93,12 @@ void delay(uint32_t cntr){
 	}
 }
 
+
+/*!
+ * brief 	Initializes BMI160 for continous reading on ACC and GYR, and enables
+ * 			interrupt pin
+ *
+ */
 void BMI160_init(void){
 
 	uint8_t id = BMI160_read_reg(IMU_ID_ADDRESS);
@@ -103,10 +129,6 @@ void BMI160_init(void){
 		BMI160_write_reg(IMU_INT_OUT_CTRL, 0x08);
 		BMI160_write_reg(IMU_INT_EN_1, 0x16);
 	}
-
-
-
-
 }
 
 
