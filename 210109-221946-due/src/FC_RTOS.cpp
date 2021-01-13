@@ -7,7 +7,8 @@
 *	https://github.com/smacario/UAV-FC.git
 *
 *	Problemas:
-*		11/1/2021 - Interrupcion de NAVC cuelga el programa.
+*		11/01/2021 - Interrupcion de NAVC cuelga el programa.
+*   12/01/2021 - Overflow del buffer de recepcion depsues de un tiempo funcionando
 *
 */
 
@@ -16,15 +17,15 @@
 #include "FC_RTOS.h"
 
 
-const uint8_t LEDs[6] = {13, 31, 33, 35, 37, 39};
+const               uint8_t LEDs[6] = {13, 31, 33, 35, 37, 39};
 
 TaskHandle_t        PidHandler          = NULL;
 TaskHandle_t        ActuatorsHandler    = NULL;
 TaskHandle_t        UartFromNAVCHandler = NULL;
 TaskHandle_t        ErrorHandler        = NULL;
 
-
-char NAVC_RxBuffer[16];
+char                NAVC_RxBuffer[NAVC_MSG_SIZE];
+NAVC_data           SensorInData;
 
 /*!
  * brief 	Inicializacion de la placa, prueba de LEDs
@@ -54,12 +55,12 @@ void InitBoard(void){
 static void PID(void *p) {
 
   TickType_t  PidLastUnblock = xTaskGetTickCount();
-  //digitalWrite(LED_AXIS, HIGH);
 
   while(1){
     /* Controlador PID, update cada 500ms */
     vTaskDelayUntil(&PidLastUnblock, pdMS_TO_TICKS(500));
     digitalWrite(LED_UPDATE, !digitalRead(LED_UPDATE));
+
   }
 }
 
@@ -69,8 +70,8 @@ static void PID(void *p) {
  *
  */
 static void Actuators(void *p){
+
   TickType_t ActLastUnblock = xTaskGetTickCount();
-  //digitalWrite(LED_AXIS, HIGH);
 
   while(1){
     /* Actuadores con update cada 250ms */
@@ -81,17 +82,33 @@ static void Actuators(void *p){
 
 /*!
  * brief 	Tarea de recepcion de datos de la NAVC
+ * 
+ *        Se reciben los datos de la NAVC en un arreglo de 12 uint8_t. EL primer byte es 
+ *        el indicador de inicio de mensaje valido '$' y el ultimo es linefeed '\n'. Se
+ *        separan los datos en secciones de 4 bytes y se hace un cast a float con las
+ *        variables de Pitch, Roll y Yaw locales.
  *
  */
 static void UartFromNAVC(void *p){
+
   while(1){
-      if(Serial2.available()){
-        vTaskSuspend(NULL);
-        digitalWrite(LED_UART, HIGH);
-        Serial2.readBytesUntil(END_CHAR, NAVC_RxBuffer, sizeof(NAVC_RxBuffer));
-        Serial.println(F(NAVC_RxBuffer));
-        digitalWrite(LED_UART, LOW);
-      }
+    
+    vTaskSuspend(NULL);
+    if(Serial2.available()){
+
+      Serial2.readBytes(NAVC_RxBuffer, sizeof(NAVC_RxBuffer));
+      memcpy(SensorInData.BufferData, NAVC_RxBuffer, sizeof(SensorInData.BufferData));
+
+
+      Serial.print(SensorInData.Pitch);
+      Serial.print(" ");
+      Serial.print(SensorInData.Roll);
+      Serial.print(" ");
+      Serial.print(SensorInData.Yaw);
+      Serial.println(" ");
+
+      //Serial.println(NAVC_RxBuffer);
+    }
   }
 }
 
@@ -156,3 +173,4 @@ void setup() {
 
 // Loos must never be blocked, not used.
 void loop() {}
+// EOF

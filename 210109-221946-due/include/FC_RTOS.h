@@ -15,8 +15,24 @@
 #define LED_GPS         (uint8_t)39
 
 #define INT_PIN         (uint8_t)29
-
+#define NAVC_MSG_SIZE   (uint8_t)18
 #define END_CHAR        (char)'\n'
+
+
+typedef union{
+    
+    struct{
+        char        Start;              // Byte de inicio de mensaje
+        float       Pitch;              // Pitch de la NAVC
+        float       Roll;               // Roll de la NAVC
+        float       Yaw;                // Yaw de la NAVC
+        float       Option;             // Valor opcional
+        char        Stop;               // Byte de stop
+    };
+    
+    char BufferData[NAVC_MSG_SIZE];
+
+}NAVC_data;
 
 
 void NAVC_IRQHandler();
