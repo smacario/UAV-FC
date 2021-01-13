@@ -46,6 +46,23 @@ typedef struct{
 }Imu;
 
 
+typedef union{
+
+	struct{
+		unsigned char 	start;				// Start byte
+		float 			NAVC_Pitch;			// Valor de Pitch (4 bytes)
+		float 			NAVC_Roll;			// Valor de Roll  (4 bytes)
+		float 			NAVC_Yaw;			// Valor de Yaw	  (4 bytes)
+		float 			NAVC_option			// (4 bytes)
+		//unsigned char	stop;				// Stop byte
+
+	};
+	unsigned char 		NAVC_PRY[18];		// 13 bytes que contriene los valores de Pitch Roll y Yaw en
+											// formato char para transmitir via UART, ademas de los bytes
+											// que indican fin y principio de mensaje
+}FC_data;
+
+
 void Config_Port_Int(void);
 void Compass(void);
 void TX_Data(char data[], uint16_t size);
