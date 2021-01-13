@@ -231,8 +231,14 @@ void TX_Data_FC(char data[], uint16_t size){
  */
 void TX_Message_FC(){
 
-	char mensaje[14] = "$abcde,123456\n";
-	char buffer[sizeof(mensaje)];
+	FC_data data;
+	data.NAVC_Pitch 	= Pitch;
+	data.NAVC_Roll  	= Roll;
+	data.NAVC_Yaw		= Yaw;
+	data.NAVC_option	= 123.56f;
+
+	char buffer[sizeof(data.NAVC_PRY)];
+	memset(buffer, 0x00, sizeof(buffer));
 
 	// Deshabilito interrupciones para transmision sin interferencias
 	LPUART_DisableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
@@ -243,11 +249,13 @@ void TX_Message_FC(){
 	if(FCIntReady){
 		// Pulso de 25 ciclos de reloj
 		GPIO_PortClear(INT_GPIO, 1<<INT_PIN);
-		for(uint8_t i=0 ; i<25 ; i++) __asm("NOP");
+		for(uint8_t i=0 ; i<10 ; i++) __asm("NOP");
 		GPIO_PortSet(INT_GPIO, 1<<INT_PIN);
 
-		// Envio mensaje
-		sprintf(buffer, mensaje);
+		//sprintf(buffer, "$%s", data.NAVC_PRY);
+		memcpy(buffer, data.NAVC_PRY, sizeof(buffer));
+		buffer[0] 	= '$';
+
 		TX_Data_FC(buffer, sizeof(buffer));
 
 		// Reset de contador de periodo
@@ -260,7 +268,6 @@ void TX_Message_FC(){
 	NVIC_EnableIRQ(PORTA_IRQn);
 	LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
 	UART_EnableInterrupts(UART2, kUART_RxDataRegFullInterruptEnable);
-
 }
 
 
@@ -299,10 +306,11 @@ void Config_Port_Int(void){
 	EnableIRQ(LPUART0_IRQn);
 	EnableIRQ(UART2_FLEXIO_IRQn);
 
-	NVIC_SetPriority(UART2_FLEXIO_IRQn, 0);		// Interrupcion de UART2 (GPS).		Maxima prioridad, stream de datos
-	NVIC_SetPriority(PORTC_PORTD_IRQn, 1);		// Interrupcion de Mag. 			Media prioridad, datos en registros
-	NVIC_SetPriority(PORTA_IRQn, 1);			// Interrupcion de Acc y Gyr. 		Media prioridad, datos en registros
-	NVIC_SetPriority(LPUART0_IRQn, 2);			// Interrupcion de LPUART0 (PC)		Baja prioridad, debug
+	NVIC_SetPriority(SysTick_IRQn, 0);			// Interrupcion del Systic			Maxima prioridad. Stream de datos
+	NVIC_SetPriority(UART2_FLEXIO_IRQn, 1);		// Interrupcion de UART2 (GPS).		Alta prioridad, stream de datos
+	NVIC_SetPriority(PORTC_PORTD_IRQn, 2);		// Interrupcion de Mag. 			Media prioridad, datos en registros
+	NVIC_SetPriority(PORTA_IRQn, 2);			// Interrupcion de Acc y Gyr. 		Media prioridad, datos en registros
+	NVIC_SetPriority(LPUART0_IRQn, 3);			// Interrupcion de LPUART0 (PC)		Baja prioridad, debug
 }
 
 
